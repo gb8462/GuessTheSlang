@@ -77,12 +77,10 @@ const closeSignup = document.getElementById("closeSignup");
 const showSignup = document.getElementById("showSignup");
 
 playBtn.addEventListener("click", () => {
-  if (currentUser) {
-    window.location.href = "game.html";
-  } else {
-    loginModal.style.display = "block";
-  }
+  // Always allow Play
+  window.location.href = "game.html";
 });
+
 
 loginBtn.addEventListener("click", () => loginModal.style.display = "block");
 showSignup.addEventListener("click", () => {

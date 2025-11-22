@@ -8,11 +8,28 @@
 </head>
 <body>
     <div id="loading">Checking authentication...</div>
+
     <div id="content" style="display:none;">
         <button id="logoutBtn">Logout</button>
+        <div class="game-container">
+            <h1 id="current_level">Level: </h1>
+            <div class="images">
+                <img id="img1">
+                <img id="img2">
+                <img id="img3">
+                <img id="img4">
+            </div>
+
+            <input id="answerInput" type="text" placeholder="Type the word...">
+
+            <button id="checkBtn">Check</button>
+            <button id="nextBtn" style="display:none;">Next</button>
+
+            <p id="feedback"></p>
+        </div>
     </div>
 
-<script type="module" src="game.js"></script>
-
+    <script type="module" src="game.js"></script>
 </body>
+
 </html>
