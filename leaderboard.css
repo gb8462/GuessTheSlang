@@ -59,12 +59,12 @@ h1 {
 
 .leaderboard-item:hover {
     background: #47476d;
+    color: #fff;
 }
 
 .rank {
     font-weight: 600;
     font-size: 16px; 
-    color: #281a3b;
     text-shadow: 0 0 6px #ffd36966;
 }
 
