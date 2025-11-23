@@ -4,15 +4,7 @@ import {getAuth, onAuthStateChanged, signOut} from "https://www.gstatic.com/fire
 import {getFirestore, collection, getDocs, doc, getDoc, updateDoc} from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
 
 // --- FIREBASE CONFIG ---
-const firebaseConfig = {
-  apiKey: "AIzaSyDMUwhrYhjk5qK9n9A7XXcemKLy0bOGfHs",
-  authDomain: "pics1word-8388a.firebaseapp.com",
-  projectId: "pics1word-8388a",
-  storageBucket: "pics1word-8388a.firebasestorage.app",
-  messagingSenderId: "839569913930",
-  appId: "1:839569913930:web:61a76cd90de9d288258eb3",
-  measurementId: "G-09YM69D70E"
-};
+const firebaseConfig = {apiKey: "AIzaSyDMUwhrYhjk5qK9n9A7XXcemKLy0bOGfHs", authDomain: "pics1word-8388a.firebaseapp.com", projectId: "pics1word-8388a", storageBucket: "pics1word-8388a.firebasestorage.app", messagingSenderId: "839569913930", appId: "1:839569913930:web:61a76cd90de9d288258eb3", measurementId: "G-09YM69D70E"};
 
 // --- INIT FIREBASE ---
 const app = initializeApp(firebaseConfig);
