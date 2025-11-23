@@ -77,6 +77,20 @@ const levels = [
   }
 ];
 
+// let the user press Enter to auto trigger check / next
+answerInput.addEventListener("keydown", (e) => {
+    if (e.key === "Enter") {
+        e.preventDefault(); // stops form submissions if inside a form
+
+        // If next button is visible → go to next level
+        if (nextBtn.style.display !== "none") {
+            nextBtn.click();
+        } else {
+            // Otherwise check the answer
+            checkBtn.click();
+        }
+    }
+});
 // Load levels
 let currentLevel = 0;
 
