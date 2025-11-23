@@ -12,41 +12,45 @@ const auth = getAuth(app);
 const db = getFirestore(app);
 
 // --- DOM ---
-const backBtn    = document.getElementById("backBtn");
-const loading    = document.getElementById("loading");
-const content    = document.getElementById("content");
-const logoutBtn  = document.getElementById("logoutBtn");
+const backBtn     = document.getElementById("backBtn");
+const loading     = document.getElementById("loading");
+const content     = document.getElementById("content");
+const logoutBtn   = document.getElementById("logoutBtn");
 const answerInput = document.getElementById("answerInput");
 const nextBtn     = document.getElementById("nextBtn");
 const checkBtn    = document.getElementById("checkBtn");
 
 // --- AUTH CHECK ---
 onAuthStateChanged(auth, user => {
-  loading.style.display = "none";
-  content.style.display = "block";
+
+  if (loading)  loading.style.display = "none";
+  if (content)  content.style.display = "block";
 
   if (user) {
-    console.log("Logged in:", user.email);
     localStorage.setItem("userId", user.uid);
-    logoutBtn.style.display = "block";
+    if (logoutBtn) logoutBtn.style.display = "block";
+
   } else {
-    console.log("Guest mode");
     localStorage.setItem("userId", "guest");
-    logoutBtn.style.display = "none";
+    if (logoutBtn) logoutBtn.style.display = "none";
   }
 });
 
 // --- BACK BUTTON ---
-backBtn.addEventListener("click", () => {
-  window.location.href = "index.html";
-});
+if (backBtn) {
+  backBtn.addEventListener("click", () => {
+    window.location.href = "index.html";
+  });
+}
 
 // --- LOGOUT ---
-logoutBtn.addEventListener("click", async () => {
-  await signOut(auth);
-  alert("You have been logged out!");
-  window.location.href = "index.html";
-});
+if (logoutBtn) {
+  logoutBtn.addEventListener("click", async () => {
+    await signOut(auth);
+    alert("You have been logged out!");
+    window.location.href = "index.html";
+  });
+}
 
 // =======================
 //     GAME LOGIC
@@ -54,7 +58,7 @@ logoutBtn.addEventListener("click", async () => {
 
 async function addScore(points) {
   const userId = localStorage.getItem("userId");
-  if (!userId || userId === "guest") return; // guests don't get score
+  if (!userId || userId === "guest") return;
 
   const userRef = doc(db, "users", userId);
   const snap = await getDoc(userRef);
@@ -63,30 +67,21 @@ async function addScore(points) {
 
   const currentScore = snap.data().score || 0;
 
-  await updateDoc(userRef, {
-    score: currentScore + points
-  });
-
-  console.log(`⭐ Score updated: +${points}`);
+  await updateDoc(userRef, { score: currentScore + points });
 }
 
 let levels = [];
 let currentLevel = 0;
 
-// 🔧 EXTRA SAFE CLEANER (fixes leftover quotes if Firestore had any)
 function cleanURL(url) {
   if (!url) return "";
   return url.replace(/^"+|"+$/g, "").trim();
 }
 
-// Load all levels from Firestore
 async function fetchLevels() {
   const snap = await getDocs(collection(db, "levels"));
   levels = snap.docs.map(doc => doc.data());
-
-  console.log("Loaded Levels:", levels); // debug
-
-  loadLevel(); // start game
+  loadLevel();
 }
 
 function loadLevel() {
@@ -105,45 +100,47 @@ function loadLevel() {
 }
 
 // --- CHECK ANSWER ---
-checkBtn.addEventListener("click", () => {
-  const input = answerInput.value.trim().toUpperCase();
-  const correct = levels[currentLevel].answer;
+if (checkBtn) {
+  checkBtn.addEventListener("click", () => {
+    const input = answerInput.value.trim().toUpperCase();
+    const correct = levels[currentLevel].answer;
 
-  if (input === correct) {
-  document.getElementById("feedback").textContent = "Correct! 🎉";
-  nextBtn.style.display = "inline-block";
-  checkBtn.style.display = "none";
-  addScore(10); // ⭐ add 10 points
+    if (input === correct) {
+      document.getElementById("feedback").textContent = "Correct! 🎉";
+      nextBtn.style.display = "inline-block";
+      checkBtn.style.display = "none";
+      addScore(10);
+    } else {
+      document.getElementById("feedback").textContent = "Try again 😅";
+    }
+  });
 }
- else {
-    document.getElementById("feedback").textContent = "Try again 😅";
-  }
-});
 
 // --- NEXT LEVEL ---
-nextBtn.addEventListener("click", () => {
-  currentLevel++;
+if (nextBtn) {
+  nextBtn.addEventListener("click", () => {
+    currentLevel++;
 
-  if (currentLevel >= levels.length) {
-    alert("You finished all levels!");
-    return;
-  }
-
-  loadLevel();
-});
-
-// --- ENTER KEY AUTO SUBMIT ---
-answerInput.addEventListener("keydown", (e) => {
-  if (e.key === "Enter") {
-    e.preventDefault();
-
-    if (nextBtn.style.display !== "none") {
-      nextBtn.click();
-    } else {
-      checkBtn.click();
+    if (currentLevel >= levels.length) {
+      alert("You finished all levels!");
+      return;
     }
-  }
-});
 
-// Start loading levels
+    loadLevel();
+  });
+}
+
+// --- ENTER KEY ---
+if (answerInput) {
+  answerInput.addEventListener("keydown", (e) => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+
+      if (nextBtn.style.display !== "none") nextBtn.click();
+      else checkBtn.click();
+    }
+  });
+}
+
+// Start loading
 fetchLevels();

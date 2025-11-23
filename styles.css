@@ -140,21 +140,6 @@ body {
   transform: scale(1.05);
 }
 
-#logoutBtn {
-  position: fixed;
-  top: 20px;
-  right: 20px;
-  backdrop-filter: blur(6px);
-  background: rgba(255, 255, 255, 0.15);
-  color: #ff9a9a;
-  border: 2px solid rgba(255,255,255,0.25);
-  border-radius: 14px;
-  padding: 10px 18px;
-  font-size: 15px;
-  cursor: pointer;
-  transition: 0.2s;
-}
-
 #logoutBtn:hover {
   color: #fff;
   background-color: #ff3333;
@@ -255,3 +240,4 @@ body {
     60% { transform: scale(1.05); opacity: 1; }
     100% { transform: scale(1); }
 }
+
