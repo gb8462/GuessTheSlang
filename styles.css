@@ -19,13 +19,6 @@ body {
   align-items: center;
   justify-content: center;
 }
-/* 
-@supports (-webkit-touch-callout: none) {
-  html, body {
-    height: 100%;
-    overflow: hidden;
-  }
-} */
 
 .home-container {
   text-align: center;
