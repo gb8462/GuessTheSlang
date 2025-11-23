@@ -5,6 +5,12 @@
   font-family: 'Poppins', sans-serif;
 }
 
+/* Fixes mobile keyboard pushing fixed elements */
+html, body {
+  height: 100%;
+  overflow: auto;
+}
+
 body {
   background: linear-gradient(135deg, #1e1e2f, #2e2e4e);
   color: #fff;
@@ -12,6 +18,14 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+/* Mobile stabilizer */
+@supports (-webkit-touch-callout: none) {
+  #logoutBtn {
+    position: fixed;
+    bottom: env(safe-area-inset-bottom, 20px);
+  }
 }
 
 .home-container {
@@ -116,6 +130,8 @@ body {
   text-decoration: underline;
 }
 
+/* styles for main game */
+
 #backBtn{
   position: fixed;
   top: 20px;
@@ -141,7 +157,7 @@ body {
 }
 
 #logoutBtn {
-  position: fixed;
+  position: absolute;
   bottom: 20px;
   right: 20px;
   color: #ff7a7a;
@@ -164,25 +180,44 @@ body {
   transform: scale(1.05);
 }
 
-/* styles for main game */
 .game-container {
   text-align: center;
-  margin-top: 0px;
 }
 
 .images {
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 10px;
-  max-width: 300px;
-  margin: 0 auto 20px;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 14px;
+  max-width: 340px;
+  margin: 0 auto 24px;
+  animation: fadeIn 0.4s ease;
 }
 
 .images img {
   width: 100%;
-  height: 120px;
+  height: 140px;
   object-fit: cover;
-  border-radius: 8px;
+  border-radius: 14px;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.25);
+  transition: transform 0.18s ease, box-shadow 0.18s ease;
+  background: #2a2a3d;
+}
+
+.images img:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.35);
+}
+
+/* fade animation */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
 }
 
 #answerInput {
