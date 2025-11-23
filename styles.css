@@ -67,10 +67,6 @@ body {
   background-color: rgba(0,0,0,0.6);
 }
 
-#content{
-  margin-top: 0px;
-}
-
 .modal-content {
   background-color: #2f2f4f;
   margin: 10% auto;
@@ -131,23 +127,19 @@ body {
 
 /* styles for main game */
 
-#backBtn{
+#backBtn {
   position: fixed;
   top: 20px;
   left: 20px;
   backdrop-filter: blur(6px);
-  color: rgb(255, 255, 255);
   background: rgba(255, 255, 255, 0.15);
-  border: 2px solid rgba(255, 255, 255, 0.25);
+  color: #fff;
+  border: 2px solid rgba(255,255,255,0.25);
   border-radius: 14px;
   padding: 10px 18px;
-  font-size: 16px;
+  font-size: 15px;
   cursor: pointer;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-  transition: background 0.3s, transform 0.2s;
+  transition: 0.2s;
 }
 #backBtn:hover {
   color: #222;
@@ -156,21 +148,18 @@ body {
 }
 
 #logoutBtn {
-  position: absolute;
-  bottom: 20px;
+  position: fixed;
+  top: 20px;
   right: 20px;
-  color: #ff7a7a;
+  backdrop-filter: blur(6px);
   background: rgba(255, 255, 255, 0.15);
-  border: 2px solid rgba(255, 255, 255, 0.25);
+  color: #ff9a9a;
+  border: 2px solid rgba(255,255,255,0.25);
   border-radius: 14px;
   padding: 10px 18px;
-  font-size: 16px;
+  font-size: 15px;
   cursor: pointer;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-  transition: background 0.3s, transform 0.2s;
+  transition: 0.2s;
 }
 
 #logoutBtn:hover {
@@ -194,7 +183,7 @@ body {
 
 .images img {
   width: 100%;
-  height: 140px;
+  height: 130px;
   object-fit: cover;
   border-radius: 14px;
   box-shadow: 0 4px 14px rgba(0, 0, 0, 0.25);
@@ -220,20 +209,21 @@ body {
 }
 
 #answerInput {
-  width: 200px;
+  width: 80%;
+  max-width: 260px;
   padding: 10px;
-  border-radius: 6px;
   font-size: 18px;
-  margin-bottom: 15px;
+  border-radius: 8px;
+  margin-top: 10px;
 }
 
 #checkBtn, #nextBtn {
   padding: 10px 20px;
-  margin: 5px;
   font-size: 16px;
-  cursor: pointer;
+  border-radius: 8px;
+  margin: 8px;
   border: none;
-  border-radius: 6px;
+  cursor: pointer;
 }
 
 #checkBtn {
@@ -252,16 +242,13 @@ body {
 }
 
 #current_level {
-    font-size: 26px;
-    font-weight: 700;
-    padding: 10px 20px;
-    color: #fff;
-    backdrop-filter: blur(6px);
-    background: rgba(255, 255, 255, 0.15);
-    border: 2px solid rgba(255, 255, 255, 0.25);
-    border-radius: 14px;
-    display: inline-block;
-    margin: 30px auto;
+  font-size: 24px;
+  margin: 20px 0;
+  padding: 10px 20px;
+  background: rgba(255,255,255,0.15);
+  backdrop-filter: blur(6px);
+  border: 2px solid rgba(255,255,255,0.25);
+  border-radius: 12px;
 }
 
 #current_level {
