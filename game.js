@@ -79,7 +79,6 @@ function loadLevel() {
   document.getElementById("img4").src = cleanURL(level.images[3]);
 
   answerInput.value = "";
-  document.getElementById("feedback").textContent = "";
   nextBtn.style.display = "none";
   checkBtn.style.display = "inline-block";
 }
@@ -91,12 +90,12 @@ if (checkBtn) {
     const correct = levels[currentLevel].answer;
 
     if (input === correct) {
-      document.getElementById("feedback").textContent = "Correct! 🎉";
+      customAlert("Correct! 🎉");
       nextBtn.style.display = "inline-block";
       checkBtn.style.display = "none";
       addScore(10);
     } else {
-      document.getElementById("feedback").textContent = "Try again 😅";
+      customAlert("Try again 😅");
     }
   });
 }

@@ -439,6 +439,7 @@ body {
     flex-direction: column;
     gap: 15px;
 }
+
 #page {
   position: relative;
   min-height: 100vh;
@@ -447,7 +448,6 @@ body {
   justify-content: center;
   align-items: center; 
 }
-
 
 /* Grid of images */
 .images {
