@@ -7,6 +7,7 @@
 }
 
 body {
+  color: #444444;
   height: 100vh;
   background: linear-gradient(to bottom right, #fafafa, #ececec);
   display: flex;
@@ -43,9 +44,16 @@ body {
 .title {
   font-size: 38px;
   font-weight: 700;
-  color: #333;
+  color: #ffe94a;
+
   margin-bottom: 20px;
+
+  /* Softer, cleaner glow */
+  text-shadow: 
+    0 2px 4px rgba(0, 0, 0, 0.35),
+    0 0 8px rgba(255, 235, 90, 0.5);
 }
+
 
 #nickname {
   font-weight: bold;
