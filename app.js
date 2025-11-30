@@ -32,23 +32,38 @@ let currentUser = null;
 onAuthStateChanged(auth, (user) => {
   const loginBtn = document.getElementById("loginBtn");
   const logoutBtn = document.getElementById("logoutBtn");
+  const usernameDisplay = document.getElementById("nickname");   // username text on homepage
 
   if (user) {
     currentUser = user;
     localStorage.setItem("userId", user.uid);
 
-    // Show logout button, hide login
+    // --- show/hide buttons ---
     if (loginBtn) loginBtn.style.display = "none";
     if (logoutBtn) logoutBtn.style.display = "block";
+
+    // --- update username text ---
+    if (usernameDisplay) {
+      usernameDisplay.textContent = user.email.split("@")[0];
+      usernameDisplay.style.display = "block";   // make sure it's visible
+    }
+
   } else {
     currentUser = null;
     localStorage.removeItem("userId");
 
-    // Show login button, hide logout
+    // --- show/hide buttons ---
     if (loginBtn) loginBtn.style.display = "block";
     if (logoutBtn) logoutBtn.style.display = "none";
+
+    // --- show guest when logged out ---
+    if (usernameDisplay) {
+      usernameDisplay.textContent = "Guest";
+      usernameDisplay.style.display = "block";   // show Guest
+    }
   }
 });
+
 
 
 // -----------------------
@@ -140,7 +155,7 @@ async function loadLeaderboard() {
       leaderboardList.innerHTML += `
         <li class="${className}">
           <span class="rank">#${rank}</span>
-          <span class="username">${player.email}</span>
+          <span class="username">${player.email.split("@")[0]}</span>
           <span class="score">${player.score}</span>
         </li>
       `;

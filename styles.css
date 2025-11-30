@@ -25,19 +25,37 @@ body {
   box-shadow: 0 8px 25px rgba(0,0,0,0.1);
 }
 
-/* TITLE + USERNAME */
-.username {
-  font-size: 18px;
-  color: #777;
-  margin-bottom: 8px;
+.Greeter {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  justify-content: center;
+}
+
+.Greeter h3 {
+  margin: 0;
+}
+
+.Greeter h6 {
+  margin: 0;
 }
 
 .title {
-  font-size: 34px;
+  font-size: 38px;
   font-weight: 700;
   color: #333;
-  margin-bottom: 40px;
+  margin-bottom: 20px;
 }
+
+#nickname {
+  font-weight: bold;
+  background: rgba(255,255,255,0.15);
+  border-radius: 10px;
+  backdrop-filter: blur(5px);
+  color: #4d4d4d;
+  display: inline-block;
+}
+
 
 /* BUTTONS */
 .button-group {
@@ -304,6 +322,56 @@ body {
   text-decoration: underline;
 }
 
+/* ===================== */
+/*    RESPONSIVE FIXES   */
+/* ===================== */
+
+/* --- Small phones (≤ 430px) --- */
+@media (max-width: 430px) {
+
+  /* shrink container */
+  .home-container {
+    width: 90%;
+    padding: 30px 20px;
+  }
+
+  .title {
+    font-size: 28px;
+    margin-bottom: 25px;
+  }
+
+  .button-group button {
+    font-size: 15px;
+    padding: 10px 14px;
+  }
+
+  .modal-content {
+    width: 90%;
+    padding: 25px 18px;
+  }
+
+  .modal-content h2 {
+    font-size: 22px;
+  }
+}
+
+/* --- Tablets / small laptops (431px–768px) --- */
+@media (max-width: 768px) {
+  .home-container {
+    width: 70%;
+  }
+
+  .title {
+    font-size: 30px;
+  }
+}
+
+/* --- Large screens (wide monitors) --- */
+@media (min-width: 1200px) {
+  .home-container {
+    transform: scale(1.15);
+  }
+}
 
 /* styles for main game */
 
