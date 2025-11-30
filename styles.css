@@ -189,6 +189,48 @@ body {
   }
 }
 
+.custom-alert {
+  position: fixed;
+  inset: 0;
+  display: none;
+  justify-content: center;
+  align-items: center;
+  background: rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(6px);
+  z-index: 999;
+}
+
+.alert-box {
+  background: #fff;
+  padding: 25px 30px;
+  border-radius: 16px;
+  width: 320px;
+  max-width: 90%;
+  box-shadow: 0 8px 30px rgba(0,0,0,0.15);
+  text-align: center;
+  animation: pop 0.2s ease;
+}
+
+@keyframes pop {
+  from { transform: scale(0.9); opacity: 0; }
+  to   { transform: scale(1); opacity: 1; }
+}
+
+#alertOk {
+  margin-top: 20px;
+  width: 100%;
+  padding: 10px;
+  background: #1a73e8;
+  color: #fff;
+  border-radius: 10px;
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+#alertOk:hover {
+  background: #1669c2;
+}
 
 /* === TITLES === */
 .modal-content h2 {
