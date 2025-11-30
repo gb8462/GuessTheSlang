@@ -1,6 +1,6 @@
 // --- Firebase imports ---
 import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
-import {getAuth, onAuthStateChanged, signOut} from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
+import {getAuth} from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
 import {getFirestore, collection, getDocs, doc, getDoc, updateDoc} from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
 
 // --- FIREBASE CONFIG ---
@@ -13,28 +13,9 @@ const db = getFirestore(app);
 
 // --- DOM ---
 const backBtn     = document.getElementById("backBtn");
-const loading     = document.getElementById("loading");
-const content     = document.getElementById("content");
-const logoutBtn   = document.getElementById("logoutBtn");
 const answerInput = document.getElementById("answerInput");
 const nextBtn     = document.getElementById("nextBtn");
 const checkBtn    = document.getElementById("checkBtn");
-
-// --- AUTH CHECK ---
-onAuthStateChanged(auth, user => {
-
-  if (loading)  loading.style.display = "none";
-  if (content)  content.style.display = "block";
-
-  if (user) {
-    localStorage.setItem("userId", user.uid);
-    if (logoutBtn) logoutBtn.style.display = "block";
-
-  } else {
-    localStorage.setItem("userId", "guest");
-    if (logoutBtn) logoutBtn.style.display = "none";
-  }
-});
 
 // --- BACK BUTTON ---
 if (backBtn) {
@@ -43,15 +24,19 @@ if (backBtn) {
   });
 }
 
-// --- LOGOUT ---
-if (logoutBtn) {
-  logoutBtn.addEventListener("click", async () => {
-    await signOut(auth);
-    alert("You have been logged out!");
-    window.location.href = "index.html";
-  });
-}
+// Custom Alert
+function customAlert(message) {
+  const alertModal = document.getElementById("customAlert");
+  const alertMsg = document.getElementById("alertMessage");
+  const alertOk = document.getElementById("alertOk");
 
+  alertMsg.textContent = message;
+  alertModal.style.display = "flex";
+
+  alertOk.onclick = () => {
+    alertModal.style.display = "none";
+  };
+}
 // =======================
 //     GAME LOGIC
 // =======================
@@ -122,7 +107,7 @@ if (nextBtn) {
     currentLevel++;
 
     if (currentLevel >= levels.length) {
-      alert("You finished all levels!");
+      customAlert("You finished all levels!");
       return;
     }
 

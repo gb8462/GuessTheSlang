@@ -8,9 +8,8 @@
     <title>Brainrot</title>
 </head>
 <body>
-    <div id="loading">Checking authentication...</div>
     <button id="backBtn"><i class="fa-solid fa-arrow-left"></i> Home</button>
-    <div id="content" style="display:none;">
+    <div id="content">
         <h1 id="current_level">Level: </h1>
         <div class="game-container">
             <div class="images">
@@ -25,6 +24,12 @@
             <button id="nextBtn" style="display:none;">Next</button>
 
             <p id="feedback"></p>
+        </div>
+    </div>
+    <div id="customAlert" class="custom-alert">
+        <div class="alert-box">
+            <p id="alertMessage"></p>
+            <button id="alertOk">OK</button>
         </div>
     </div>
 
