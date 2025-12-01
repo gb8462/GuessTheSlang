@@ -170,7 +170,14 @@ function revealOneCorrectLetter() {
 }
 
 hintBtn?.addEventListener("click", async () => {
-  // guard UI
+  const userId = localStorage.getItem("userId");
+
+  // REAL guest check (covers: null, undefined, empty, "guest")
+  if (!userId || userId === "guest") {
+    customAlert("You need an account to use hints.");
+    return;
+  }
+
   if (!safeGetCurrentLevel()) {
     customAlert("Level not ready yet.");
     return;
