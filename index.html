@@ -5,20 +5,33 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Guess The Slang</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="config/styles.css">
 </head>
 
 <body>
   <div class="home-container">
     <h1 class="title">Guess The Slang</h1>
 
+    <div class="Greeter" style="margin-bottom: 20px; margin-top: 0px;">
+      <h3>Welcome!!</h3>
+      <h4 id="nickname" style="display: none;">Guest</h4>
+    </div>
+    
     <div class="button-group">
       <button id="playBtn">▶ Play</button>
-      <button id="leaderboardBtn">🏆Leaderboard</button>
-      <button id="loginBtn">👤Login</button>
+      <button id="leaderboardBtn">🏆 Leaderboard</button>
+      <button id="dictionaryBtn"><i class="fa-solid fa-book-open" style="color: #21143fff;"></i> Dictionary</button>
+      <button id="loginBtn" style="display:none;">👤 Login</button>
       <button id="logoutBtn" style="display:none;"><i class="fa-solid fa-arrow-right-from-bracket"></i> Logout</button>
     </div>
   </div>
+  
+<div id="customAlert" class="custom-alert">
+    <div class="alert-box">
+        <p id="alertMessage"></p>
+        <button id="alertOk">OK</button>
+    </div>
+</div>
 
   <!-- Login Modal -->
   <div id="loginModal" class="modal">
@@ -48,7 +61,7 @@
     </div>
   </div>
 
-  <script type="module" src="app.js"></script>
+  <script type="module" src="config/app.js"></script>
 
 </body>
 </html>

@@ -32,23 +32,38 @@ let currentUser = null;
 onAuthStateChanged(auth, (user) => {
   const loginBtn = document.getElementById("loginBtn");
   const logoutBtn = document.getElementById("logoutBtn");
+  const usernameDisplay = document.getElementById("nickname");   // username text on homepage
 
   if (user) {
     currentUser = user;
     localStorage.setItem("userId", user.uid);
 
-    // Show logout button, hide login
+    // --- show/hide buttons ---
     if (loginBtn) loginBtn.style.display = "none";
     if (logoutBtn) logoutBtn.style.display = "block";
+
+    // --- update username text ---
+    if (usernameDisplay) {
+      usernameDisplay.textContent = user.email.split("@")[0];
+      usernameDisplay.style.display = "block";   // make sure it's visible
+    }
+
   } else {
     currentUser = null;
     localStorage.removeItem("userId");
 
-    // Show login button, hide logout
+    // --- show/hide buttons ---
     if (loginBtn) loginBtn.style.display = "block";
     if (logoutBtn) logoutBtn.style.display = "none";
+
+    // --- show guest when logged out ---
+    if (usernameDisplay) {
+      usernameDisplay.textContent = "Guest";
+      usernameDisplay.style.display = "block";   // show Guest
+    }
   }
 });
+
 
 
 // -----------------------
@@ -57,6 +72,21 @@ onAuthStateChanged(auth, (user) => {
 function onPage(selector, callback) {
   if (document.querySelector(selector)) callback();
 }
+
+// Custom Alert
+function customAlert(message) {
+  const alertModal = document.getElementById("customAlert");
+  const alertMsg = document.getElementById("alertMessage");
+  const alertOk = document.getElementById("alertOk");
+
+  alertMsg.textContent = message;
+  alertModal.style.display = "flex";
+
+  alertOk.onclick = () => {
+    alertModal.style.display = "none";
+  };
+}
+
 
 // -----------------------
 //      AUTH FUNCTIONS
@@ -71,12 +101,12 @@ async function signupUser(email, password) {
       score: 0
     });
 
-    alert("Signup successful!");
+    customAlert("Signup successful!");
     localStorage.setItem("userId", user.uid);
 
     document.getElementById("signupModal").style.display = "none";
   } catch (error) {
-    alert(error.message);
+    customAlert(error.message);
   }
 }
 
@@ -86,11 +116,11 @@ async function loginUser(email, password) {
     const user = userCredential.user;
 
     localStorage.setItem("userId", user.uid);
-    alert("Login successful!");
+    customAlert("Login successful!");
 
     document.getElementById("loginModal").style.display = "none";
   } catch (error) {
-    alert(error.message);
+    customAlert(error.message);
   }
 }
 
@@ -125,7 +155,7 @@ async function loadLeaderboard() {
       leaderboardList.innerHTML += `
         <li class="${className}">
           <span class="rank">#${rank}</span>
-          <span class="username">${player.email}</span>
+          <span class="username">${player.email.split("@")[0]}</span>
           <span class="score">${player.score}</span>
         </li>
       `;
@@ -156,6 +186,13 @@ onPage("#leaderboardBtn", () => {
   });
 });
 
+// DICTIONARY BUTTON
+onPage("#dictionaryBtn", () => {
+  document.getElementById("dictionaryBtn").addEventListener("click", () => {
+    window.location.href = "dictionary.html";
+  });
+});
+
 // BACK BUTTON (leaderboard/game)
 onPage("#backBtn", () => {
   document.getElementById("backBtn").addEventListener("click", () => {
@@ -171,7 +208,7 @@ onPage("#loginBtn", () => {
   const loginModal = document.getElementById("loginModal");
 
   loginBtn.addEventListener("click", () => {
-    loginModal.style.display = "block";
+    loginModal.style.display = "flex";
   });
 });
 
@@ -183,7 +220,7 @@ onPage("#showSignup", () => {
 
   showSignup.addEventListener("click", () => {
     loginModal.style.display = "none";
-    signupModal.style.display = "block";
+    signupModal.style.display = "flex";
   });
 });
 
@@ -222,10 +259,10 @@ onPage("#signupSubmit", () => {
     const confirmPassword = document.getElementById("confirmPassword").value.trim();
 
     if (!email || !password || !confirmPassword)
-      return alert("Please fill out all fields!");
+      return customAlert("Please fill out all fields!");
 
     if (password !== confirmPassword)
-      return alert("Passwords do not match!");
+      return customAlert("Passwords do not match!");
 
     signupUser(email, password);
   });
@@ -240,7 +277,7 @@ onPage("#loginSubmit", () => {
     const password = document.getElementById("password").value.trim();
 
     if (!email || !password)
-      return alert("Please enter both email and password!");
+      return customAlert("Please enter both email and password!");
 
     loginUser(email, password);
   });
@@ -253,8 +290,19 @@ onPage("#logoutBtn", () => {
   document.getElementById("logoutBtn").addEventListener("click", async () => {
     await auth.signOut();
     localStorage.removeItem("userId");
-    alert("Logged out!");
+    customAlert("Logged out!");
 
     window.location.href = "index.html";
   });
+});
+
+// Sound effects
+const clickSfx = new Audio("sounds/click.mp3");
+clickSfx.volume = 0.5; // optional
+
+document.querySelectorAll("button").forEach(btn => {
+    btn.addEventListener("click", () => {
+        clickSfx.currentTime = 0;
+        clickSfx.play();
+    });
 });

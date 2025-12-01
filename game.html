@@ -3,16 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="config/styles.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <title>Brainrot</title>
+    <title>Guess The Slang</title>
 </head>
 <body>
-    <div id="loading">Checking authentication...</div>
-    <div id="content" style="display:none;">
-        <button id="backBtn"><i class="fa-solid fa-arrow-left"></i> Home</button>
-        <h1 id="current_level">Level: </h1>
+    <button id="backBtn"><i class="fa-solid fa-arrow-left"></i> Home</button>
+    <div id="content">
         <div class="game-container">
+            <h1 id="current_level">Level: </h1>
             <div class="images">
                 <img id="img1">
                 <img id="img2">
@@ -20,15 +19,31 @@
                 <img id="img4">
             </div>
 
-            <input id="answerInput" type="text" placeholder="Type the word...">
-            <button id="checkBtn">Check</button>
-            <button id="nextBtn" style="display:none;">Next</button>
+            <div id="answerBoxes" class="answer-boxes"></div>
+            <div id="letterBank" class="letter-bank"></div>
+            
+            <div class="btn-group">
+                <button id="shuffleBtn">Shuffle</button>
+                <button id="hintBtn">Hint (10 pts)</button>
+            </div>
 
-            <p id="feedback"></p>
+            <div class="btn-group">
+                <button id="checkBtn">Check</button>
+                <button id="nextBtn" style="display:none;">Next</button>
+            </div>
+
+            <button id="resetLvls" class="reset-btn">Reset Levels</button>
+
+        </div>
+    </div>
+    <div id="customAlert" class="custom-alert">
+        <div class="alert-box">
+            <p id="alertMessage"></p>
+            <button id="alertOk">OK</button>
         </div>
     </div>
 
-    <script type="module" src="game.js"></script>
+    <script type="module" src="config/game.js"></script>
 </body>
 
 </html>
