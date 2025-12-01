@@ -186,6 +186,13 @@ onPage("#leaderboardBtn", () => {
   });
 });
 
+// DICTIONARY BUTTON
+onPage("#dictionaryBtn", () => {
+  document.getElementById("dictionaryBtn").addEventListener("click", () => {
+    window.location.href = "dictionary.html";
+  });
+});
+
 // BACK BUTTON (leaderboard/game)
 onPage("#backBtn", () => {
   document.getElementById("backBtn").addEventListener("click", () => {
