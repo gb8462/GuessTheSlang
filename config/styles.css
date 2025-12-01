@@ -566,43 +566,32 @@ body {
 /* ========================================================= */
 
 /* -------- MOBILE SMALL (phones < 480px) -------- */
-@media (max-width: 471px) {
-  .game-container {
-      margin-top: -30px;
-      width: 100%;
-      padding: 18px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-  }
-
-  .home-container{
-    margin-top: -80px;
-    width: 100%;
-  }
+@media (max-width: 479px) {
+    .game-container {
+        display: flex;
+        width: 100%;
+    }
 
   #content {
-      margin-top: 380px;
+      margin-top: 150px;
       display: flex;
       flex-direction: column;
       align-items: center;
       text-align: center;
       width: 100%;
   }
+    .images img {
+        height: 130px;
+    }
 
-  #current_level {
-      font-size: 22px;
-      margin-top: 0px;
-  }
-
-  #backBtn {
-      padding: 8px 14px;
-      font-size: 14px;
-  }
+    #current_level {
+        font-size: 24px;
+        margin-top: 0px;
+    }
 }        
 
-/* -------- TABLETS (480px - 768px) -------- */
-@media (min-width: 480px) and (max-width: 768px) {
+/* -------- TABLETS -------- */
+@media (max-width: 820px) {
     .game-container {
         width: 380px;
     }
@@ -626,7 +615,7 @@ body {
 }
 
 /* -------- DESKTOP LARGE SCREENS (1024px+) -------- */
-@media (min-width: 1024px) {
+@media (max-width: 1024px) {
     .game-container {
         width: 500px;
         padding: 30px;
