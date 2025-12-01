@@ -295,3 +295,14 @@ onPage("#logoutBtn", () => {
     window.location.href = "index.html";
   });
 });
+
+// Sound effects
+const clickSfx = new Audio("sounds/click.mp3");
+clickSfx.volume = 0.5; // optional
+
+document.querySelectorAll("button").forEach(btn => {
+    btn.addEventListener("click", () => {
+        clickSfx.currentTime = 0;
+        clickSfx.play();
+    });
+});

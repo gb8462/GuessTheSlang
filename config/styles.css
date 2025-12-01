@@ -645,9 +645,27 @@ body {
         margin-top: 0px;
     }
 }
-
 /* -------- DESKTOP LARGE SCREENS (1024px+) -------- */
-@media (max-width: 1024px) {
+@media (max-width: 1023px) {
+    .game-container {
+        width: 500px;
+        padding: 30px;
+    }
+
+    .images img {
+        height: 180px;
+    }
+
+    #answerInput, #checkBtn, #nextBtn {
+        font-size: 18px;
+    }
+
+    #current_level {
+        font-size: 32px;
+    }
+}
+/* -------- DESKTOP LARGE SCREENS (1024px+) -------- */
+@media (min-width: 1024px) {
     .game-container {
         width: 500px;
         padding: 30px;

@@ -1,14 +1,7 @@
 // --- Firebase imports ---
 import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
 import { getAuth } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
-import {
-  getFirestore,
-  collection,
-  getDocs,
-  doc,
-  getDoc,
-  updateDoc
-} from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
+import {getFirestore,collection,getDocs,doc,getDoc,updateDoc} from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
 
 // --- FIREBASE CONFIG ---
 const firebaseConfig = {
@@ -498,6 +491,7 @@ checkBtn?.addEventListener("click", () => {
 // =======================
 //     SHUFFLE BUTTON
 // =======================
+
 shuffleBtn?.addEventListener("click", () => {
   // guard
   if (!safeGetCurrentLevel()) {
@@ -506,6 +500,18 @@ shuffleBtn?.addEventListener("click", () => {
   }
   shuffleTilesAndFilledBoxes();
 });
+
+// Sound effects
+const clickSfx = new Audio("sounds/click.mp3");
+clickSfx.volume = 0.5; // optional
+
+document.querySelectorAll("button").forEach(btn => {
+    btn.addEventListener("click", () => {
+        clickSfx.currentTime = 0;
+        clickSfx.play();
+    });
+});
+
 
 // Start game
 fetchLevels();
