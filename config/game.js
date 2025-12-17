@@ -29,10 +29,23 @@ const nextBtn     = document.getElementById("nextBtn");
 const hintBtn     = document.getElementById("hintBtn");
 const resetBtn    = document.getElementById("resetLvls");
 
+function onPage(selector, callback) {
+    if (document.querySelector(selector)) callback();
+}
+
 // --- BACK BUTTON ---
-backBtn?.addEventListener("click", () => {
-  window.location.href = "index.html";
+onPage("#backBtn", () => {
+  document.getElementById("backBtn").addEventListener("click", () => {
+    const sfx = new Audio("./config/sounds/click.mp3");
+    sfx.volume = 0.5;
+    sfx.play();
+
+    setTimeout(() => {
+      window.location.href = "index.html";
+    }, 150);
+  });
 });
+
 
 // --- CUSTOM ALERT ---
 function customAlert(message) {
@@ -456,15 +469,6 @@ function shuffleTilesAndFilledBoxes() {
 }
 
 // =======================
-//  OPTIONAL: get current answer string
-// =======================
-function getCurrentAnswerFromBoxes() {
-  return Array.from(answerBoxes.querySelectorAll(".answer-box"))
-    .map(b => b.textContent || "")
-    .join("");
-}
-
-// =======================
 //      COLLECT ANSWER
 // =======================
 function getPlayerAnswer() {
@@ -509,16 +513,14 @@ shuffleBtn?.addEventListener("click", () => {
 });
 
 // Sound effects
-const clickSfx = new Audio("sounds/click.mp3");
-clickSfx.volume = 0.5; // optional
 
 document.querySelectorAll("button").forEach(btn => {
     btn.addEventListener("click", () => {
-        clickSfx.currentTime = 0;
+        const clickSfx = new Audio("./config/sounds/click.mp3");
+        clickSfx.volume = 0.5;
         clickSfx.play();
     });
 });
-
 
 // Start game
 fetchLevels();

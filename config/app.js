@@ -64,18 +64,6 @@ onAuthStateChanged(auth, (user) => {
   }
 });
 
-
-// Sound effects
-const clickSfx = new Audio("sounds/click.mp3");
-clickSfx.volume = 0.5; // optional
-
-document.querySelectorAll("button").forEach(btn => {
-    btn.addEventListener("click", () => {
-        clickSfx.currentTime = 0;
-        clickSfx.play();
-    });
-});
-
 // -----------------------
 // Helper: run only if element exists
 // -----------------------
@@ -96,7 +84,6 @@ function customAlert(message) {
     alertModal.style.display = "none";
   };
 }
-
 
 // -----------------------
 //      AUTH FUNCTIONS
@@ -185,28 +172,52 @@ if (leaderboardList) loadLeaderboard();
 // PLAY BUTTON (index)
 onPage("#playBtn", () => {
   document.getElementById("playBtn").addEventListener("click", () => {
-    window.location.href = "game.html";
+    const sfx = new Audio("./config/sounds/click.mp3");
+    sfx.volume = 0.5;
+    sfx.play();
+
+    setTimeout(() => {
+      window.location.href = "game.html";
+    }, 150);
   });
 });
 
 // LEADERBOARD BUTTON
 onPage("#leaderboardBtn", () => {
   document.getElementById("leaderboardBtn").addEventListener("click", () => {
-    window.location.href = "leaderboard.html";
+    const sfx = new Audio("./config/sounds/click.mp3");
+    sfx.volume = 0.5;
+    sfx.play();
+
+    setTimeout(() => {
+      window.location.href = "leaderboard.html";
+    }, 150);
   });
 });
 
 // DICTIONARY BUTTON
 onPage("#dictionaryBtn", () => {
   document.getElementById("dictionaryBtn").addEventListener("click", () => {
-    window.location.href = "dictionary.html";
+    const sfx = new Audio("./config/sounds/click.mp3");
+    sfx.volume = 0.5;
+    sfx.play();
+
+    setTimeout(() => {
+      window.location.href = "dictionary.html";
+    }, 150);
   });
 });
 
 // BACK BUTTON (leaderboard/game)
 onPage("#backBtn", () => {
   document.getElementById("backBtn").addEventListener("click", () => {
-    window.location.href = "index.html";
+    const sfx = new Audio("./config/sounds/click.mp3");
+    sfx.volume = 0.5;
+    sfx.play();
+
+    setTimeout(() => {
+      window.location.href = "index.html";
+    }, 150);
   });
 });
 
@@ -306,3 +317,11 @@ onPage("#logoutBtn", () => {
   });
 });
 
+// Sound effects
+document.querySelectorAll("button").forEach(btn => {
+    btn.addEventListener("click", () => {
+        const clickSfx = new Audio("./config/sounds/click.mp3");
+        clickSfx.volume = 0.5;
+        clickSfx.play();
+    });
+});
