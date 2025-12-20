@@ -44,6 +44,33 @@ const resetBtn    = $("resetLvls");
 const scoreText   = $("scoreText");
 
 // =======================
+//        SOUND FX
+// =======================
+const clickSfx = new Audio("./config/sounds/click.mp3");
+clickSfx.volume = 0.5;
+
+document.addEventListener("pointerdown", () => {
+  clickSfx.play().then(() => {
+    clickSfx.pause();
+    clickSfx.currentTime = 0;
+  }).catch(() => {});
+}, { once: true });
+
+function playClick() {
+  const sfx = clickSfx.cloneNode();
+  sfx.playbackRate = 0.95 + Math.random() * 0.1;
+  sfx.play().catch(() => {});
+}
+
+document.addEventListener("click", (e) => {
+  if (
+    e.target.closest("button") ||
+    e.target.classList.contains("letter-tile") ||
+    e.target.classList.contains("answer-box")
+  ) playClick();
+});
+
+// =======================
 //        UTILITIES
 // =======================
 function customAlert(message) {
@@ -66,25 +93,30 @@ function cleanURL(url = "") {
 }
 
 function showSuccessPopup(answer, description) {
-  const popup = $("successPopup");
-  const word  = $("popupWord");
-  const desc  = $("popupDesc");
-  const okBtn = $("popupOk");
+  const popup = document.getElementById("successPopup");
+  const word  = document.getElementById("popupWord");
+  const desc  = document.getElementById("popupDesc");
+  const okBtn = document.getElementById("popupOk");
 
-  if (!popup) return;
+  if (!popup || !word || !desc || !okBtn) return;
 
   word.textContent = answer;
   desc.textContent = description || "No description available.";
+
   popup.classList.remove("hidden");
 
-  okBtn.onclick = () => popup.classList.add("hidden");
+  okBtn.onclick = () => {
+    popup.classList.add("hidden");
+  };
 }
 
 // =======================
 //      POINTS SYSTEM
 // =======================
+
 const STARTING_POINTS = 50;
 
+// who am I?
 function getUserId() {
   return localStorage.getItem("userId") || "guest";
 }
@@ -92,10 +124,12 @@ function getUserId() {
 // ---------- GUEST ----------
 function getGuestPoints() {
   const stored = localStorage.getItem("guestPoints");
+
   if (stored === null) {
     localStorage.setItem("guestPoints", STARTING_POINTS);
     return STARTING_POINTS;
   }
+
   return Number(stored);
 }
 
@@ -106,10 +140,15 @@ function setGuestPoints(value) {
 // ---------- POINTS ----------
 async function getPoints() {
   const uid = getUserId();
+
   if (uid === "guest") return getGuestPoints();
 
-  const snap = await getDoc(doc(db, "users", uid));
-  return snap.exists() ? snap.data().points ?? STARTING_POINTS : STARTING_POINTS;
+  const ref = doc(db, "users", uid);
+  const snap = await getDoc(ref);
+
+  if (!snap.exists()) return STARTING_POINTS;
+
+  return snap.data().points ?? STARTING_POINTS;
 }
 
 async function addPoints(amount) {
@@ -125,8 +164,10 @@ async function addPoints(amount) {
   const snap = await getDoc(ref);
   if (!snap.exists()) return;
 
+  const current = snap.data().points ?? STARTING_POINTS;
+
   await updateDoc(ref, {
-    points: (snap.data().points ?? STARTING_POINTS) + amount
+    points: current + amount
   });
 
   updatePointsUI();
@@ -138,6 +179,7 @@ async function spendPoints(amount) {
   if (uid === "guest") {
     const pts = getGuestPoints();
     if (pts < amount) return false;
+
     setGuestPoints(pts - amount);
     updatePointsUI();
     return true;
@@ -155,13 +197,16 @@ async function spendPoints(amount) {
   return true;
 }
 
+// ---------- UI ----------
 async function updatePointsUI() {
-  if (scoreText) scoreText.textContent = `Points: ${await getPoints()}`;
+  if (!scoreText) return;
+  scoreText.textContent = `Points: ${await getPoints()}`;
 }
 
 // =======================
 //        GAME STATE
 // =======================
+
 function getLevelKey() {
   return `currentLevel_${getUserId()}`;
 }
@@ -177,22 +222,39 @@ function saveLevel(level) {
 let levels = [];
 let currentLevel = getSavedLevel();
 
+
 function safeLevel() {
   return levels[currentLevel] || null;
 }
+
+function setUI(enabled) {
+  [hintBtn, shuffleBtn, checkBtn, nextBtn]
+    .forEach(b => b && (b.disabled = !enabled));
+}
+
+setUI(false);
 
 // =======================
 //       LEVEL LOAD
 // =======================
 async function fetchLevels() {
-  const snap = await getDocs(collection(db, "levels"));
-  levels = snap.docs.sort((a, b) => a.id.localeCompare(b.id)).map(d => d.data());
+  try {
+    const snap = await getDocs(collection(db, "levels"));
+    levels = snap.docs
+      .sort((a, b) => a.id.localeCompare(b.id))
+      .map(d => d.data());
 
-  if (!levels.length) return customAlert("No levels found");
+    if (!levels.length) return customAlert("No levels found");
 
-  currentLevel = Math.min(currentLevel, levels.length - 1);
-  saveLevel(currentLevel);
-  loadLevel();
+    currentLevel = Math.min(currentLevel, levels.length - 1);
+    localStorage.setItem("currentLevel", currentLevel);
+
+    loadLevel();
+    setUI(true);
+  } catch (e) {
+    console.error(e);
+    customAlert("Failed to load levels");
+  }
 }
 
 function loadLevel() {
@@ -218,6 +280,7 @@ function loadLevel() {
 // =======================
 function buildAnswerBoxes(answer = "") {
   answerBoxes.innerHTML = "";
+
   [...answer].forEach((_, i) => {
     const box = document.createElement("div");
     box.className = "answer-box";
@@ -267,6 +330,7 @@ function buildLetterTiles(answer = "") {
 
     tile.onclick = () => {
       if (tile.style.visibility === "hidden") return;
+
       const idx = findEmptyBox();
       if (idx === -1) return;
 
@@ -281,37 +345,117 @@ function buildLetterTiles(answer = "") {
 }
 
 // =======================
+//      SCORE SYSTEM
+// =======================
+
+async function addScore(amount) {
+  const uid = getUserId();
+  if (uid === "guest") return;
+
+  const ref = doc(db, "users", uid);
+  const snap = await getDoc(ref);
+  if (!snap.exists()) return;
+
+  await updateDoc(ref, {
+    score: (snap.data().score || 0) + amount
+  });
+}
+
+// Save Completed Levels
+function markLevelCompleted(levelIndex) {
+  const uid = getUserId(); // VERY IMPORTANT
+
+  const key = `completedLevels_${uid}`;
+  const completed = JSON.parse(
+    localStorage.getItem(key) || "[]"
+  );
+
+  if (!completed.includes(levelIndex)) {
+    completed.push(levelIndex);
+    localStorage.setItem(
+      key,
+      JSON.stringify(completed)
+    );
+  }
+}
+
+// =======================
 //        ACTIONS
 // =======================
 checkBtn.onclick = async () => {
   const level = safeLevel();
   if (!level) return;
 
-  const answer = [...answerBoxes.children].map(b => b.textContent).join("");
-  if (answer === level.answer) {
-    showSuccessPopup(level.answer, level.description);
-    await addPoints(5);
-    nextBtn.style.display = "inline-block";
-    checkBtn.style.display = "none";
-  } else {
+    const answer = [...answerBoxes.children].map(b => b.textContent).join("");
+
+    if (answer === level.answer) {
+      showSuccessPopup(level.answer, level.description);
+
+      markLevelCompleted(currentLevel);
+
+      await addScore(10);
+      await addPoints(5);
+
+      nextBtn.style.display = "inline-block";
+      checkBtn.style.display = "none";
+    }
+
+  else {
     customAlert("Try again 😅");
   }
 };
 
 nextBtn.onclick = () => {
   currentLevel++;
-  saveLevel(currentLevel);
-  currentLevel >= levels.length ? customAlert("All levels done!") : loadLevel();
+  localStorage.setItem("currentLevel", currentLevel);
+  currentLevel >= levels.length
+    ? customAlert("All levels done!")
+    : loadLevel();
 };
+
+// =======================
+//      SHUFFLE
+// =======================
+shuffleBtn.onclick = () => {
+  if (!letterBank.children.length) return;
+
+  [...letterBank.children]
+    .sort(() => Math.random() - 0.5)
+    .forEach(tile => letterBank.appendChild(tile));
+};
+
+// =======================
+//        HINT
+// =======================
+hintBtn.onclick = async () => {
+  if (!(await spendPoints(10)))
+    return customAlert("Not enough points!");
+
+  const level = safeLevel();
+  if (!level) return;
+
+  const correct = level.answer.toUpperCase();
+
+  [...answerBoxes.children].some((box, i) => {
+    if (box.textContent !== correct[i]) {
+      if (box.textContent) clearBox(i);
+      box.textContent = correct[i];
+      return true;
+    }
+  });
+};
+
 
 resetBtn.onclick = () => {
   currentLevel = 0;
-  saveLevel(0);
+  localStorage.setItem("currentLevel", 0);
   fetchLevels();
   customAlert("Progress reset");
 };
 
-backBtn.onclick = () => setTimeout(() => location.href = "index.html", 150);
+backBtn.onclick = () => {
+  setTimeout(() => location.href = "index.html", 150);
+};
 
 // =======================
 //        START
