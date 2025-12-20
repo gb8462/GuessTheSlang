@@ -3,7 +3,14 @@
 // =======================
 import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
 import { getAuth } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
-import {getFirestore,collection,getDocs,doc,getDoc,updateDoc} from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
+import {
+  getFirestore,
+  collection,
+  getDocs,
+  doc,
+  getDoc,
+  updateDoc
+} from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
 
 // =======================
 //     FIREBASE CONFIG
@@ -14,13 +21,12 @@ const firebaseConfig = {
   projectId: "pics1word-8388a",
   storageBucket: "pics1word-8388a.firebasestorage.app",
   messagingSenderId: "839569913930",
-  appId: "1:839569913930:web:61a76cd90de9d288258eb3",
-  measurementId: "G-09YM69D70E"
+  appId: "1:839569913930:web:61a76cd90de9d288258eb3"
 };
 
-const app = initializeApp(firebaseConfig);
+const app  = initializeApp(firebaseConfig);
 const auth = getAuth(app);
-const db = getFirestore(app);
+const db   = getFirestore(app);
 
 // =======================
 //        DOM CACHE
@@ -35,6 +41,7 @@ const checkBtn    = $("checkBtn");
 const nextBtn     = $("nextBtn");
 const hintBtn     = $("hintBtn");
 const resetBtn    = $("resetLvls");
+const scoreText   = $("scoreText");
 
 // =======================
 //        SOUND FX
@@ -42,7 +49,6 @@ const resetBtn    = $("resetLvls");
 const clickSfx = new Audio("./config/sounds/click.mp3");
 clickSfx.volume = 0.5;
 
-// unlock audio (mobile fix)
 document.addEventListener("pointerdown", () => {
   clickSfx.play().then(() => {
     clickSfx.pause();
@@ -56,15 +62,12 @@ function playClick() {
   sfx.play().catch(() => {});
 }
 
-// global click handler
 document.addEventListener("click", (e) => {
   if (
     e.target.closest("button") ||
     e.target.classList.contains("letter-tile") ||
     e.target.classList.contains("answer-box")
-  ) {
-    playClick();
-  }
+  ) playClick();
 });
 
 // =======================
@@ -90,31 +93,96 @@ function cleanURL(url = "") {
 }
 
 // =======================
-//        SCORE
+//      POINTS SYSTEM
 // =======================
-async function getUserRef() {
-  const uid = localStorage.getItem("userId");
-  if (!uid || uid === "guest") return null;
-  return doc(db, "users", uid);
+
+const STARTING_POINTS = 50;
+
+// who am I?
+function getUserId() {
+  return localStorage.getItem("userId") || "guest";
 }
 
-async function addScore(points) {
-  const ref = await getUserRef();
-  if (!ref) return;
+// ---------- GUEST ----------
+function getGuestPoints() {
+  const stored = localStorage.getItem("guestPoints");
+
+  if (stored === null) {
+    localStorage.setItem("guestPoints", STARTING_POINTS);
+    return STARTING_POINTS;
+  }
+
+  return Number(stored);
+}
+
+function setGuestPoints(value) {
+  localStorage.setItem("guestPoints", value);
+}
+
+// ---------- POINTS ----------
+async function getPoints() {
+  const uid = getUserId();
+
+  if (uid === "guest") return getGuestPoints();
+
+  const ref = doc(db, "users", uid);
+  const snap = await getDoc(ref);
+
+  if (!snap.exists()) return STARTING_POINTS;
+
+  return snap.data().points ?? STARTING_POINTS;
+}
+
+async function addPoints(amount) {
+  const uid = getUserId();
+
+  if (uid === "guest") {
+    setGuestPoints(getGuestPoints() + amount);
+    updatePointsUI();
+    return;
+  }
+
+  const ref = doc(db, "users", uid);
   const snap = await getDoc(ref);
   if (!snap.exists()) return;
-  await updateDoc(ref, { score: (snap.data().score || 0) + points });
+
+  const current = snap.data().points ?? STARTING_POINTS;
+
+  await updateDoc(ref, {
+    points: current + amount
+  });
+
+  updatePointsUI();
 }
 
-async function deductScore(points) {
-  const ref = await getUserRef();
-  if (!ref) return false;
+async function spendPoints(amount) {
+  const uid = getUserId();
+
+  if (uid === "guest") {
+    const pts = getGuestPoints();
+    if (pts < amount) return false;
+
+    setGuestPoints(pts - amount);
+    updatePointsUI();
+    return true;
+  }
+
+  const ref = doc(db, "users", uid);
   const snap = await getDoc(ref);
   if (!snap.exists()) return false;
-  const score = snap.data().score || 0;
-  if (score < points) return false;
-  await updateDoc(ref, { score: score - points });
+
+  const pts = snap.data().points ?? STARTING_POINTS;
+  if (pts < amount) return false;
+
+  await updateDoc(ref, { points: pts - amount });
+  updatePointsUI();
   return true;
+}
+
+// ---------- UI ----------
+async function updatePointsUI() {
+  if (!scoreText) return;
+  scoreText.textContent = `Points: ${await getPoints()}`;
 }
 
 // =======================
@@ -128,18 +196,21 @@ function safeLevel() {
 }
 
 function setUI(enabled) {
-  [hintBtn, shuffleBtn, checkBtn, nextBtn].forEach(b => b && (b.disabled = !enabled));
+  [hintBtn, shuffleBtn, checkBtn, nextBtn]
+    .forEach(b => b && (b.disabled = !enabled));
 }
 
 setUI(false);
 
 // =======================
-//        LEVEL LOAD
+//       LEVEL LOAD
 // =======================
 async function fetchLevels() {
   try {
     const snap = await getDocs(collection(db, "levels"));
-    levels = snap.docs.sort((a, b) => a.id.localeCompare(b.id)).map(d => d.data());
+    levels = snap.docs
+      .sort((a, b) => a.id.localeCompare(b.id))
+      .map(d => d.data());
 
     if (!levels.length) return customAlert("No levels found");
 
@@ -173,7 +244,7 @@ function loadLevel() {
 }
 
 // =======================
-//        ANSWER BOXES
+//      ANSWER BOXES
 // =======================
 function buildAnswerBoxes(answer = "") {
   answerBoxes.innerHTML = "";
@@ -181,19 +252,19 @@ function buildAnswerBoxes(answer = "") {
   [...answer].forEach((_, i) => {
     const box = document.createElement("div");
     box.className = "answer-box";
-    box.dataset.index = i;
     box.onclick = () => box.textContent && clearBox(i);
     answerBoxes.appendChild(box);
   });
 }
 
 function findEmptyBox() {
-  return [...answerBoxes.children].find(b => !b.textContent)?.dataset.index ?? -1;
+  return [...answerBoxes.children].findIndex(b => !b.textContent);
 }
 
 function clearBox(i) {
   const box = answerBoxes.children[i];
   const tileId = box.dataset.srcTile;
+
   box.textContent = "";
   delete box.dataset.srcTile;
 
@@ -203,7 +274,7 @@ function clearBox(i) {
 }
 
 // =======================
-//        LETTER TILES
+//      LETTER TILES
 // =======================
 function buildLetterTiles(answer = "") {
   letterBank.innerHTML = "";
@@ -212,7 +283,9 @@ function buildLetterTiles(answer = "") {
   [...answer.toUpperCase()].forEach(l => needed[l] = (needed[l] || 0) + 1);
 
   let letters = Object.entries(needed).flatMap(([l, c]) => Array(c).fill(l));
-  while (letters.length < 12) letters.push(String.fromCharCode(65 + Math.random() * 26));
+  while (letters.length < 12)
+    letters.push(String.fromCharCode(65 + Math.random() * 26));
+
   letters.sort(() => Math.random() - 0.5);
 
   const uid = Date.now();
@@ -225,6 +298,7 @@ function buildLetterTiles(answer = "") {
 
     tile.onclick = () => {
       if (tile.style.visibility === "hidden") return;
+
       const idx = findEmptyBox();
       if (idx === -1) return;
 
@@ -239,16 +313,38 @@ function buildLetterTiles(answer = "") {
 }
 
 // =======================
+//      SCORE SYSTEM
+// =======================
+
+async function addScore(amount) {
+  const uid = getUserId();
+  if (uid === "guest") return;
+
+  const ref = doc(db, "users", uid);
+  const snap = await getDoc(ref);
+  if (!snap.exists()) return;
+
+  await updateDoc(ref, {
+    score: (snap.data().score || 0) + amount
+  });
+}
+
+
+// =======================
 //        ACTIONS
 // =======================
-checkBtn.onclick = () => {
+checkBtn.onclick = async () => {
   const level = safeLevel();
   if (!level) return;
 
   const answer = [...answerBoxes.children].map(b => b.textContent).join("");
+
   if (answer === level.answer) {
-    customAlert("Correct! 🎉");
-    addScore(10);
+    customAlert("Correct! 🎉 +10 score +5 points");
+
+    await addScore(10);   // leaderboard
+    await addPoints(5);   // spendable
+
     nextBtn.style.display = "inline-block";
     checkBtn.style.display = "none";
   } else {
@@ -259,16 +355,20 @@ checkBtn.onclick = () => {
 nextBtn.onclick = () => {
   currentLevel++;
   localStorage.setItem("currentLevel", currentLevel);
-  currentLevel >= levels.length ? customAlert("All levels done!") : loadLevel();
+  currentLevel >= levels.length
+    ? customAlert("All levels done!")
+    : loadLevel();
 };
 
 shuffleBtn.onclick = () => {
-  [...letterBank.children].sort(() => Math.random() - 0.5)
+  [...letterBank.children]
+    .sort(() => Math.random() - 0.5)
     .forEach(t => letterBank.appendChild(t));
 };
 
 hintBtn.onclick = async () => {
-  if (!(await deductScore(10))) return customAlert("Not enough points!");
+  if (!(await spendPoints(10)))
+    return customAlert("Not enough points!");
 
   const level = safeLevel();
   const correct = level.answer.toUpperCase();
@@ -297,3 +397,4 @@ backBtn.onclick = () => {
 //        START
 // =======================
 fetchLevels();
+updatePointsUI();

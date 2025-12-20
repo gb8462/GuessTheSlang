@@ -362,3 +362,34 @@ body {
 #alertOk:hover {
   background: #1669c2;
 }
+
+.level-header {
+  display: block;
+}
+
+.points-ui {
+  position: absolute;
+  top: 15px;
+  right: 20px;
+  font-size: 20px;
+  font-weight: bold;
+}
+
+@media (max-width: 400px) {
+  .level-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .points-ui {
+    position: static; /* disables absolute */
+    margin-bottom: 0;
+    font-size: 16px;
+  }
+}
+@media (max-width: 350px) {
+  .points-ui {
+    font-size: 14px;
+  }
+}
