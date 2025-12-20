@@ -92,6 +92,24 @@ function cleanURL(url = "") {
   return url.replace(/^"+|"+$/g, "").trim();
 }
 
+function showSuccessPopup(answer, description) {
+  const popup = document.getElementById("successPopup");
+  const word  = document.getElementById("popupWord");
+  const desc  = document.getElementById("popupDesc");
+  const okBtn = document.getElementById("popupOk");
+
+  if (!popup || !word || !desc || !okBtn) return;
+
+  word.textContent = answer;
+  desc.textContent = description || "No description available.";
+
+  popup.classList.remove("hidden");
+
+  okBtn.onclick = () => {
+    popup.classList.add("hidden");
+  };
+}
+
 // =======================
 //      POINTS SYSTEM
 // =======================
@@ -357,16 +375,17 @@ checkBtn.onclick = async () => {
     const answer = [...answerBoxes.children].map(b => b.textContent).join("");
 
     if (answer === level.answer) {
-    customAlert("Correct! 🎉 +10 score +5 points");
+      showSuccessPopup(level.answer, level.description);
 
-    markLevelCompleted(currentLevel);
+      markLevelCompleted(currentLevel);
 
-    await addScore(10);
-    await addPoints(5);
+      await addScore(10);
+      await addPoints(5);
 
-    nextBtn.style.display = "inline-block";
-    checkBtn.style.display = "none";
-  }
+      nextBtn.style.display = "inline-block";
+      checkBtn.style.display = "none";
+    }
+
   else {
     customAlert("Try again 😅");
   }

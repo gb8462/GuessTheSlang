@@ -9,11 +9,14 @@
     <title>Guess The Slang</title>
   </head>
   <body>
+
     <button id="backBtn">
       <i class="fa-solid fa-arrow-left"></i> <span></span>
     </button>
+
     <div id="content">
       <div class="game-container">
+
         <div class="level-header">
           <h1 id="current_level">Level 1</h1>
           <div id="scoreText" class="points-ui">Points: 0</div>
@@ -42,10 +45,20 @@
         <button id="resetLvls" class="reset-btn">Reset Levels</button>
       </div>
     </div>
+
     <div id="customAlert" class="custom-alert">
       <div class="alert-box">
         <p id="alertMessage"></p>
         <button id="alertOk">OK</button>
+      </div>
+    </div>
+
+    <div id="successPopup" class="popup hidden">
+      <div class="popup-card">
+        <i class="fa-solid fa-unlock-keyhole"></i>
+        <h2 id="popupWord">Unlocked!</h2>
+        <p id="popupDesc">Description goes here</p>
+        <button id="popupOk">Continue</button>
       </div>
     </div>
 

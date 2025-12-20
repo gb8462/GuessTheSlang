@@ -167,6 +167,7 @@ body {
 /* ===================== */
 /*     GAME LAYOUT       */
 /* ===================== */
+
 #content {
   min-height: 100dvh;
   width: 100%;
@@ -387,5 +388,78 @@ body {
 @media (max-width: 350px) {
   .points-ui {
     font-size: 14px;
+  }
+}
+
+.popup {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.55);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 999;
+}
+
+.popup.hidden {
+  display: none;
+}
+
+.popup-card {
+  background: #ffffff;
+  color: #222;
+  padding: 26px 22px;
+  border-radius: 18px;
+  width: 90%;
+  max-width: 330px;
+  text-align: center;
+  box-shadow: 0 20px 45px rgba(0,0,0,0.28);
+  animation: popIn 0.3s ease;
+  border-top: 6px solid #2e85e9;
+}
+
+.popup-card i {
+  font-size: 38px;
+  margin-bottom: 8px;
+  color: #2ce94c;
+}
+
+.popup-card h2 {
+  margin: 6px 0;
+  font-size: 22px;
+  font-weight: 700;
+}
+
+.popup-card p {
+  font-size: 14px;
+  color: #555;
+  line-height: 1.5;
+  margin-bottom: 18px;
+}
+
+.popup-card button {
+  border: none;
+  background: #222;
+  color: #fff;
+  padding: 12px 20px;
+  border-radius: 12px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: 0.2s ease;
+}
+
+.popup-card button:hover {
+  background: #000;
+  transform: translateY(-1px);
+}
+
+@keyframes popIn {
+  from {
+    transform: scale(0.85);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
   }
 }
