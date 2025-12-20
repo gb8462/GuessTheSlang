@@ -73,23 +73,23 @@ h1 {
 /* Locked state */
 .entry.locked {
   background: #1f1f1f;
-  color: #aaa;
+  color: #dadada;
   box-shadow: none;
 }
 
 .entry.locked .word {
-  color: #aaa;
+  color: #dadada;
 }
 
 .entry.locked .desc {
-  color: #777;
+  color: #dadada;
 }
 
 /* Lock label */
 .lock-label {
   margin-top: 10px;
   font-size: 13px;
-  color: #999;
+  color: #f0f0f0;
   font-style: italic;
   display: flex;
   align-items: center;

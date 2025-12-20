@@ -30,7 +30,7 @@ const container = document.querySelector(".container");
 const backBtn   = document.getElementById("backBtn");
 
 // =======================
-//        HELPERS
+//         HELPERS
 // =======================
 function getUserId() {
   return localStorage.getItem("userId") || "guest";
@@ -44,7 +44,7 @@ function getCompletedLevels() {
 }
 
 // =======================
-//      LOAD DICTIONARY
+//     LOAD DICTIONARY
 // =======================
 async function loadDictionary() {
   try {
@@ -102,13 +102,13 @@ async function loadDictionary() {
 }
 
 // =======================
-//        EVENTS
+//         EVENTS
 // =======================
 backBtn.onclick = () => {
   setTimeout(() => location.href = "index.html", 150);
 };
 
 // =======================
-//        START
+//          START
 // =======================
 loadDictionary();
