@@ -1,0 +1,113 @@
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 20px;
+  background: linear-gradient(135deg, #f6f7fb, #e9ecf1);
+}
+
+/* Back button */
+#backBtn {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  padding: 10px 18px;
+  border-radius: 12px;
+  border: none;
+  background: white;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+  cursor: pointer;
+  font-size: 15px;
+  transition: transform 0.2s ease, background 0.2s ease;
+}
+
+#backBtn:hover {
+  background: #f0f0f0;
+  transform: translateY(-2px);
+}
+
+h1 {
+  text-align: center;
+  margin-bottom: 25px;
+}
+
+/* Main container */
+.container {
+  max-width: 650px;
+  margin: 0 auto;
+  display: grid;
+  gap: 14px;
+}
+
+/* Entry card */
+.entry {
+  background: white;
+  border-radius: 14px;
+  padding: 16px 18px;
+  box-shadow: 0 6px 16px rgba(0,0,0,0.08);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.entry:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 10px 24px rgba(0,0,0,0.12);
+}
+
+/* Word */
+.word {
+  font-size: 20px;
+  font-weight: bold;
+  color: #222;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* Description */
+.desc {
+  margin-top: 8px;
+  font-size: 14px;
+  color: #555;
+  line-height: 1.4;
+}
+
+/* Locked state */
+.entry.locked {
+  background: #1f1f1f;
+  color: #aaa;
+  box-shadow: none;
+}
+
+.entry.locked .word {
+  color: #aaa;
+}
+
+.entry.locked .desc {
+  color: #777;
+}
+
+/* Lock label */
+.lock-label {
+  margin-top: 10px;
+  font-size: 13px;
+  color: #999;
+  font-style: italic;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* Badge for unlocked */
+.unlocked-badge {
+  background: #e6fff1;
+  color: #0a8f55;
+  font-size: 12px;
+  padding: 4px 8px;
+  border-radius: 999px;
+  font-weight: bold;
+}
+
+@media (max-width: 479px) {
+  h1 {
+    margin-top: 50px;
+  }
+}

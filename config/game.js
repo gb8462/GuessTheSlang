@@ -329,6 +329,23 @@ async function addScore(amount) {
   });
 }
 
+// Save Completed Levels
+function markLevelCompleted(levelIndex) {
+  const uid = getUserId(); // VERY IMPORTANT
+
+  const key = `completedLevels_${uid}`;
+  const completed = JSON.parse(
+    localStorage.getItem(key) || "[]"
+  );
+
+  if (!completed.includes(levelIndex)) {
+    completed.push(levelIndex);
+    localStorage.setItem(
+      key,
+      JSON.stringify(completed)
+    );
+  }
+}
 
 // =======================
 //        ACTIONS
@@ -337,17 +354,20 @@ checkBtn.onclick = async () => {
   const level = safeLevel();
   if (!level) return;
 
-  const answer = [...answerBoxes.children].map(b => b.textContent).join("");
+    const answer = [...answerBoxes.children].map(b => b.textContent).join("");
 
-  if (answer === level.answer) {
+    if (answer === level.answer) {
     customAlert("Correct! 🎉 +10 score +5 points");
 
-    await addScore(10);   // leaderboard
-    await addPoints(5);   // spendable
+    markLevelCompleted(currentLevel);
+
+    await addScore(10);
+    await addPoints(5);
 
     nextBtn.style.display = "inline-block";
     checkBtn.style.display = "none";
-  } else {
+  }
+  else {
     customAlert("Try again 😅");
   }
 };
