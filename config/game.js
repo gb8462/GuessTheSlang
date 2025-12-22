@@ -360,6 +360,13 @@ function saveHintState(state) {
   localStorage.setItem(getHintKey(), JSON.stringify(state));
 }
 
+function getHintLimit(answerLength) {
+  if (answerLength <= 2) return 0;
+  if (answerLength === 3) return 1;
+  if (answerLength <= 5) return 2;
+  return 3;
+}
+
 // =======================
 //       LEVEL LOAD
 // =======================
@@ -593,14 +600,31 @@ hintBtn.onclick = async () => {
   const level = safeLevel();
   if (!level) return;
 
-  const correct = level.answer.toUpperCase();
+  const answer = level.answer.toUpperCase();
+  const limit = getHintLimit(answer.length);
 
-  // find all hintable positions FIRST
+  // 🚫 no hints allowed for very short words
+  if (limit === 0) {
+    customAlert("Hints are disabled for short words 👀");
+    return;
+  }
+
+  // load saved hint usage
+  const state = getHintState();
+  const usedHints = state[currentLevel] || [];
+
+  // 🚫 reached hint limit
+  if (usedHints.length >= limit) {
+    customAlert(`Hint limit reached (${limit}/${limit})`);
+    return;
+  }
+
+  // find hintable positions
   const candidates = [...answerBoxes.children]
     .map((box, i) => ({ box, i }))
-    .filter(({ box, i }) => box.textContent !== correct[i]);
+    .filter(({ box, i }) => box.textContent !== answer[i]);
 
-  // 🚫 nothing to hint → don't charge points
+  // 🚫 nothing left to hint
   if (!candidates.length) {
     customAlert("All letters are already revealed 😉");
     return;
@@ -612,35 +636,31 @@ hintBtn.onclick = async () => {
     return;
   }
 
-  // pick RANDOM slot
+  // 🎲 pick random slot
   const { box, i } =
     candidates[Math.floor(Math.random() * candidates.length)];
 
-  // clear wrong letter (restore tile)
+  // clear wrong letter if exists
   if (box.textContent) clearBox(i);
 
   // find matching visible tile
   const tile = [...letterBank.children].find(
     t =>
-      t.textContent === correct[i] &&
+      t.textContent === answer[i] &&
       t.style.visibility !== "hidden"
   );
 
   if (!tile) return;
 
   // place hint letter
-  box.textContent = correct[i];
+  box.textContent = answer[i];
   box.dataset.srcTile = tile.dataset.tileId;
   tile.style.visibility = "hidden";
 
-  // 💾 save hint state
-  const state = getHintState();
+  // 💾 save hint usage
   state[currentLevel] ??= [];
-
-  if (!state[currentLevel].includes(i)) {
-    state[currentLevel].push(i);
-    saveHintState(state);
-  }
+  state[currentLevel].push(i);
+  saveHintState(state);
 };
 
 resetBtn.onclick = () => {
