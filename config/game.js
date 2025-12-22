@@ -247,7 +247,7 @@ async function fetchLevels() {
     if (!levels.length) return customAlert("No levels found");
 
     currentLevel = Math.min(currentLevel, levels.length - 1);
-    localStorage.setItem("currentLevel", currentLevel);
+    saveLevel(currentLevel);
 
     loadLevel();
     setUI(true);
@@ -407,7 +407,7 @@ checkBtn.onclick = async () => {
 
 nextBtn.onclick = () => {
   currentLevel++;
-  localStorage.setItem("currentLevel", currentLevel);
+  saveLevel(currentLevel);
   currentLevel >= levels.length
     ? customAlert("All levels done!")
     : loadLevel();
@@ -445,10 +445,9 @@ hintBtn.onclick = async () => {
   });
 };
 
-
 resetBtn.onclick = () => {
   currentLevel = 0;
-  localStorage.setItem("currentLevel", 0);
+  saveLevel(0);
   fetchLevels();
   customAlert("Progress reset");
 };
