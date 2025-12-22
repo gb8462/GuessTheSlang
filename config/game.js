@@ -555,11 +555,29 @@ hintBtn.onclick = async () => {
   const correct = level.answer.toUpperCase();
 
   [...answerBoxes.children].some((box, i) => {
-    if (box.textContent !== correct[i]) {
-      if (box.textContent) clearBox(i);
-      box.textContent = correct[i];
-      return true;
-    }
+    // skip if already correct
+    if (box.textContent === correct[i]) return false;
+
+    // clear wrong letter (and restore its tile)
+    if (box.textContent) clearBox(i);
+
+    // find a matching visible tile
+    const tile = [...letterBank.children].find(
+      t =>
+        t.textContent === correct[i] &&
+        t.style.visibility !== "hidden"
+    );
+
+    if (!tile) return false;
+
+    // place letter
+    box.textContent = correct[i];
+    box.dataset.srcTile = tile.dataset.tileId;
+
+    // hide tile
+    tile.style.visibility = "hidden";
+
+    return true; // stop after one hint letter
   });
 };
 
