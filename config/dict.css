@@ -72,7 +72,7 @@ h1 {
 
 /* Locked state */
 .entry.locked {
-  background: #1f1f1f;
+  background: #063a64;
   color: #dadada;
   box-shadow: none;
 }
