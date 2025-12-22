@@ -52,6 +52,9 @@ clickSfx.volume = 0.5;
 const levelCompleteSfx = new Audio("./config/sounds/levelComplete.mp3");
 levelCompleteSfx.volume = 0.7;
 
+const hintSfx = new Audio("./config/sounds/hintFx.mp3");
+hintSfx.volume = 0.6;
+
 document.addEventListener("pointerdown", () => {
   clickSfx.play().then(() => {
     clickSfx.pause();
@@ -230,6 +233,11 @@ async function showEndPopup() {
 function playLevelComplete() {
   levelCompleteSfx.currentTime = 0;
   levelCompleteSfx.play().catch(() => {});
+}
+
+function playHintSound() {
+  hintSfx.currentTime = 0;
+  hintSfx.play().catch(() => {});
 }
 
 // =======================
@@ -644,6 +652,8 @@ hintBtn.onclick = async () => {
     customAlert("Not enough points!");
     return;
   }
+  
+  playHintSound(); // 🔊 hint purchase sound
 
   // 🎲 pick random slot
   const { box, i } =
