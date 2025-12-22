@@ -49,6 +49,9 @@ const scoreText   = $("scoreText");
 const clickSfx = new Audio("./config/sounds/click.mp3");
 clickSfx.volume = 0.5;
 
+const levelCompleteSfx = new Audio("./config/sounds/levelComplete.mp3");
+levelCompleteSfx.volume = 0.7;
+
 document.addEventListener("pointerdown", () => {
   clickSfx.play().then(() => {
     clickSfx.pause();
@@ -222,6 +225,11 @@ async function showEndPopup() {
   noBtn.onclick = () => {
     popup.classList.add("hidden");
   };
+}
+
+function playLevelComplete() {
+  levelCompleteSfx.currentTime = 0;
+  levelCompleteSfx.play().catch(() => {});
 }
 
 // =======================
@@ -550,6 +558,7 @@ checkBtn.onclick = async () => {
     const answer = [...answerBoxes.children].map(b => b.textContent).join("");
 
     if (answer === level.answer) {
+      playLevelComplete();
       showSuccessPopup(level.answer, level.description);
       levelConfettiBurst(); // 🎉 small burst
 
