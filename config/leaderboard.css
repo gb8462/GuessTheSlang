@@ -1,4 +1,6 @@
-/* Reset */
+/* =======================
+   RESET
+======================= */
 * {
   margin: 0;
   padding: 0;
@@ -15,7 +17,9 @@ body {
   user-select: none;
 }
 
-/* Back Button */
+/* =======================
+      BACK BUTTON
+======================= */
 #backBtn {
   position: absolute;
   top: 20px;
@@ -28,8 +32,8 @@ body {
   cursor: pointer;
   font-size: 16px;
   display: flex;
-  gap: 8px;
   align-items: center;
+  gap: 8px;
   transition: 0.2s ease;
 }
 
@@ -38,88 +42,138 @@ body {
   background: #f3f3f3;
 }
 
-/* Container */
+/* =======================
+       CONTAINER
+======================= */
 .leaderboard-container {
   margin-top: 120px;
   width: 100%;
-  max-width: 700px;
-  background: white;
-  padding: 35px;
-  border-radius: 24px;
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.12);
+  max-width: 720px;
+  background: #ffffff;
+  padding: 36px;
+  border-radius: 26px;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.12);
   display: flex;
   flex-direction: column;
   align-items: center;
 }
 
-/* Title */
+/* =======================
+         TITLE
+======================= */
 .leaderboard-title {
   font-size: 34px;
-  margin-bottom: 25px;
+  margin-bottom: 22px;
   background: linear-gradient(45deg, #3b82f6, #6366f1);
   color: transparent;
   background-clip: text;
   -webkit-background-clip: text;
 }
 
-/* List */
+/* =======================
+   SCROLLABLE LIST
+======================= */
 .leaderboard-list {
   width: 100%;
   list-style: none;
+  max-height: 320px;           /* SCROLL FRAME */
+  overflow-y: auto;
+  padding-right: 6px;
 }
 
-/* Leaderboard Items */
+/* Smooth scrollbar */
+.leaderboard-list::-webkit-scrollbar {
+  width: 6px;
+}
+
+.leaderboard-list::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.leaderboard-list::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, #3b82f6, #6366f1);
+  border-radius: 10px;
+}
+
+/* =======================
+         ITEMS
+======================= */
 .leaderboard-list li {
   padding: 16px 20px;
-  margin-bottom: 12px;
-  border-radius: 16px;
+  margin-bottom: 14px;
+  border-radius: 18px;
   font-size: 18px;
   display: flex;
   justify-content: space-between;
   align-items: center;
   background: #ffffff;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  box-shadow: 0 3px 10px rgba(0,0,0,0.08);
   transition: 0.2s ease;
 }
 
 .leaderboard-list li:hover {
   transform: translateY(-3px);
-  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  box-shadow: 0 6px 16px rgba(0,0,0,0.15);
 }
 
-/* Rank Colors */
+/* =======================
+       RANK COLORS
+======================= */
 .leaderboard-list li:nth-child(1) {
   background: linear-gradient(90deg, #ffd93b, #ffb800);
   color: #433800;
-  font-weight: bold;
+  font-weight: 700;
 }
 
 .leaderboard-list li:nth-child(2) {
   background: linear-gradient(90deg, #e5e7eb, #cfd2d4);
   color: #3a3a3a;
-  font-weight: bold;
+  font-weight: 700;
 }
 
 .leaderboard-list li:nth-child(3) {
   background: linear-gradient(90deg, #f6c7a3, #eb8f42);
   color: #4a2c00;
-  font-weight: bold;
+  font-weight: 700;
 }
 
-/* Responsive */
+/* =======================
+       TEXT SECTIONS
+==========================*/
+.rank {
+  font-weight: 600;
+}
+
+.username {
+  flex: 1;
+  margin-left: 14px;
+  text-align: left;
+}
+
+.score {
+  font-weight: 600;
+}
+
+/* =======================
+       RESPONSIVE
+======================= */
 @media (max-width: 600px) {
   .leaderboard-container {
     margin-top: 90px;
-    padding: 25px;
+    padding: 26px;
   }
 
   .leaderboard-title {
     font-size: 28px;
   }
 
+  .leaderboard-list {
+    max-height: 360px;
+  }
+
   .leaderboard-list li {
-    padding: 14px 16px;
     font-size: 16px;
+    padding: 14px 16px;
   }
 
   #backBtn {
@@ -134,7 +188,7 @@ body {
   }
 
   .leaderboard-list li {
-    padding: 12px 14px;
     font-size: 15px;
+    padding: 12px 14px;
   }
 }
