@@ -590,22 +590,29 @@ shuffleBtn.onclick = () => {
 //          HINT
 // =======================
 hintBtn.onclick = async () => {
-  if (!(await spendPoints(10)))
-    return customAlert("Not enough points!");
-
   const level = safeLevel();
   if (!level) return;
 
   const correct = level.answer.toUpperCase();
 
-  // find all hintable positions
+  // find all hintable positions FIRST
   const candidates = [...answerBoxes.children]
     .map((box, i) => ({ box, i }))
     .filter(({ box, i }) => box.textContent !== correct[i]);
 
-  if (!candidates.length) return;
+  // 🚫 nothing to hint → don't charge points
+  if (!candidates.length) {
+    customAlert("All letters are already revealed 😉");
+    return;
+  }
 
-  // pick RANDOM one
+  // 💰 now spend points
+  if (!(await spendPoints(10))) {
+    customAlert("Not enough points!");
+    return;
+  }
+
+  // pick RANDOM slot
   const { box, i } =
     candidates[Math.floor(Math.random() * candidates.length)];
 
@@ -626,7 +633,7 @@ hintBtn.onclick = async () => {
   box.dataset.srcTile = tile.dataset.tileId;
   tile.style.visibility = "hidden";
 
-    // save hint state
+  // 💾 save hint state
   const state = getHintState();
   state[currentLevel] ??= [];
 
@@ -634,7 +641,6 @@ hintBtn.onclick = async () => {
     state[currentLevel].push(i);
     saveHintState(state);
   }
-
 };
 
 resetBtn.onclick = () => {
