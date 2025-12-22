@@ -348,6 +348,18 @@ function setUI(enabled) {
 
 setUI(false);
 
+function getHintKey() {
+  return `hintState_${getUserId()}`;
+}
+
+function getHintState() {
+  return JSON.parse(localStorage.getItem(getHintKey()) || "{}");
+}
+
+function saveHintState(state) {
+  localStorage.setItem(getHintKey(), JSON.stringify(state));
+}
+
 // =======================
 //       LEVEL LOAD
 // =======================
@@ -386,7 +398,8 @@ function loadLevel() {
   checkBtn.style.display = "inline-block";
 
   buildAnswerBoxes(level.answer);
-  buildLetterTiles(level.answer);
+  buildLetterTiles(level.answer);  
+  restoreHints();
 }
 
 // =======================
@@ -458,6 +471,33 @@ function buildLetterTiles(answer = "") {
   });
 }
 
+function restoreHints() {
+  const level = safeLevel();
+  if (!level) return;
+
+  const correct = level.answer.toUpperCase();
+  const state = getHintState();
+  const revealed = state[currentLevel] || [];
+
+  revealed.forEach(i => {
+    const box = answerBoxes.children[i];
+    if (!box) return;
+
+    // find matching visible tile
+    const tile = [...letterBank.children].find(
+      t =>
+        t.textContent === correct[i] &&
+        t.style.visibility !== "hidden"
+    );
+
+    if (!tile) return;
+
+    box.textContent = correct[i];
+    box.dataset.srcTile = tile.dataset.tileId;
+    tile.style.visibility = "hidden";
+  });
+}
+
 // =======================
 //      SCORE SYSTEM
 // =======================
@@ -508,6 +548,10 @@ checkBtn.onclick = async () => {
 
       markLevelCompleted(currentLevel);
 
+      const state = getHintState();
+      delete state[currentLevel];
+      saveHintState(state);
+          
       await addScore(10);
       await addPoints(5);
 
@@ -581,6 +625,16 @@ hintBtn.onclick = async () => {
   box.textContent = correct[i];
   box.dataset.srcTile = tile.dataset.tileId;
   tile.style.visibility = "hidden";
+
+    // save hint state
+  const state = getHintState();
+  state[currentLevel] ??= [];
+
+  if (!state[currentLevel].includes(i)) {
+    state[currentLevel].push(i);
+    saveHintState(state);
+  }
+
 };
 
 resetBtn.onclick = () => {
