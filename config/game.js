@@ -383,6 +383,9 @@ function getHintLimit(answerLength) {
   return 3;
 }
 
+let hintInProgress = false;
+let nextInProgress = false;
+
 // =======================
 //       LEVEL LOAD
 // =======================
@@ -588,14 +591,26 @@ checkBtn.onclick = async () => {
   }
 };
 
-nextBtn.onclick = () => {
-  currentLevel++;
-  saveLevel(currentLevel);
+nextBtn.onclick = async () => {
+  if (nextInProgress) return; // 🚫 stop spam
+  nextInProgress = true;
+  nextBtn.disabled = true;
 
-  if (currentLevel >= levels.length) {
-    showEndPopup(); // 🎉 HERE
-  } else {
-    loadLevel();
+  try {
+    currentLevel++;
+    saveLevel(currentLevel);
+
+    if (currentLevel >= levels.length) {
+      await showEndPopup(); // important to await
+    } else {
+      loadLevel();
+    }
+  } finally {
+    // re-enable ONLY if not end screen
+    if (currentLevel < levels.length) {
+      nextBtn.disabled = false;
+      nextInProgress = false;
+    }
   }
 };
 
@@ -614,72 +629,72 @@ shuffleBtn.onclick = () => {
 //          HINT
 // =======================
 hintBtn.onclick = async () => {
-  const level = safeLevel();
-  if (!level) return;
+  if (hintInProgress) return; // 🚫 block spam
+  hintInProgress = true;
+  hintBtn.disabled = true;
 
-  const answer = level.answer.toUpperCase();
-  const limit = getHintLimit(answer.length);
+  try {
+    const level = safeLevel();
+    if (!level) return;
 
-  // 🚫 no hints allowed for very short words
-  if (limit === 0) {
-    customAlert("Hints are disabled for short words 👀");
-    return;
+    const answer = level.answer.toUpperCase();
+    const limit = getHintLimit(answer.length);
+
+    if (limit === 0) {
+      customAlert("Hints are disabled for short words 👀");
+      return;
+    }
+
+    const state = getHintState();
+    const usedHints = state[currentLevel] || [];
+
+    if (usedHints.length >= limit) {
+      customAlert(`Hint limit reached (${limit}/${limit})`);
+      return;
+    }
+
+    const candidates = [...answerBoxes.children]
+      .map((box, i) => ({ box, i }))
+      .filter(({ box, i }) => box.textContent !== answer[i]);
+
+    if (!candidates.length) {
+      customAlert("All letters are already revealed 😉");
+      return;
+    }
+
+    if (!(await spendPoints(10))) {
+      customAlert("Not enough points!");
+      return;
+    }
+
+    playHintSound();
+
+    const { box, i } =
+      candidates[Math.floor(Math.random() * candidates.length)];
+
+    if (box.textContent) clearBox(i);
+
+    const tile = [...letterBank.children].find(
+      t =>
+        t.textContent === answer[i] &&
+        t.style.visibility !== "hidden"
+    );
+
+    if (!tile) return;
+
+    box.textContent = answer[i];
+    box.dataset.srcTile = tile.dataset.tileId;
+    tile.style.visibility = "hidden";
+
+    state[currentLevel] ??= [];
+    state[currentLevel].push(i);
+    saveHintState(state);
+
+  } finally {
+    // ✅ always unlock
+    hintInProgress = false;
+    hintBtn.disabled = false;
   }
-
-  // load saved hint usage
-  const state = getHintState();
-  const usedHints = state[currentLevel] || [];
-
-  // 🚫 reached hint limit
-  if (usedHints.length >= limit) {
-    customAlert(`Hint limit reached (${limit}/${limit})`);
-    return;
-  }
-
-  // find hintable positions
-  const candidates = [...answerBoxes.children]
-    .map((box, i) => ({ box, i }))
-    .filter(({ box, i }) => box.textContent !== answer[i]);
-
-  // 🚫 nothing left to hint
-  if (!candidates.length) {
-    customAlert("All letters are already revealed 😉");
-    return;
-  }
-
-  // 💰 now spend points
-  if (!(await spendPoints(10))) {
-    customAlert("Not enough points!");
-    return;
-  }
-
-  playHintSound(); // 🔊 hint purchase sound
-
-  // 🎲 pick random slot
-  const { box, i } =
-    candidates[Math.floor(Math.random() * candidates.length)];
-
-  // clear wrong letter if exists
-  if (box.textContent) clearBox(i);
-
-  // find matching visible tile
-  const tile = [...letterBank.children].find(
-    t =>
-      t.textContent === answer[i] &&
-      t.style.visibility !== "hidden"
-  );
-
-  if (!tile) return;
-
-  // place hint letter
-  box.textContent = answer[i];
-  box.dataset.srcTile = tile.dataset.tileId;
-  tile.style.visibility = "hidden";
-
-  // 💾 save hint usage
-  state[currentLevel] ??= [];
-  state[currentLevel].push(i);
-  saveHintState(state);
 };
 
 const resetPopup   = document.getElementById("resetPopup");
