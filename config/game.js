@@ -834,7 +834,6 @@ resetCancel.onclick = () => {
   resetPopup.classList.add("hidden");
 };
 
-
 backBtn.onclick = () => {
   setTimeout(() => location.href = "index.html", 150);
 };
