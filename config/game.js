@@ -383,6 +383,7 @@ function getHintLimit(answerLength) {
   return 3;
 }
 
+let checkInProgress = false;
 let hintInProgress = false;
 let nextInProgress = false;
 
@@ -587,32 +588,56 @@ function markLevelCompleted(levelIndex) {
 // =======================
 //         ACTIONS
 // =======================
-checkBtn.onclick = async () => {
-  const level = safeLevel();
-  if (!level) return;
 
-    const answer = [...answerBoxes.children].map(b => b.textContent).join("");
+function hasRewarded(level) {
+  return localStorage.getItem(`rewarded_${getUserId()}_${level}`) === "1";
+}
+
+function markRewarded(level) {
+  localStorage.setItem(`rewarded_${getUserId()}_${level}`, "1");
+}
+
+checkBtn.onclick = async () => {
+  if (checkInProgress) return;
+  checkInProgress = true;
+  checkBtn.disabled = true;
+
+  try {
+    const level = safeLevel();
+    if (!level) return;
+
+    const answer = [...answerBoxes.children]
+      .map(b => b.textContent)
+      .join("");
 
     if (answer === level.answer) {
       playLevelComplete();
       showSuccessPopup(level.answer, level.description);
-      levelConfettiBurst(); // 🎉 small burst
+      levelConfettiBurst();
 
       markLevelCompleted(currentLevel);
 
       const state = getHintState();
       delete state[currentLevel];
       saveHintState(state);
-          
-      await addScore(10);
-      await addPoints(5);
+
+      if (!hasRewarded(currentLevel)) {
+        await addScore(10);
+        await addPoints(5);
+        markRewarded(currentLevel);
+      }
 
       nextBtn.style.display = "inline-block";
       checkBtn.style.display = "none";
+    } else {
+      customAlert("Try again 😅");
     }
-
-  else {
-    customAlert("Try again 😅");
+  } finally {
+    // re-enable ONLY if still on same level
+    if (checkBtn.style.display !== "none") {
+      checkBtn.disabled = false;
+      checkInProgress = false;
+    }
   }
 };
 
