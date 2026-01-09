@@ -469,9 +469,9 @@ function applyBoxSizingMode(answer) {
   const hasSpace = answer.includes(" ");
   const wordLength = answer.length;
 
-  // reset each call
-  answerBoxes.classList.remove("long-word");
   answerBoxes.classList.remove("shrink-word");
+  answerBoxes.classList.remove("long-word");
+  answerBoxes.classList.remove("very-long");
 
   if (hasSpace) {
     answerBoxes.style.flexWrap = "wrap";
@@ -480,8 +480,13 @@ function applyBoxSizingMode(answer) {
 
   if (wordLength > 7) {
     answerBoxes.classList.add("shrink-word");
-    answerBoxes.classList.add("long-word");   // 👉 flex-start only here
+    answerBoxes.classList.add("long-word");
     answerBoxes.style.flexWrap = "nowrap";
+
+    if (wordLength > 9) {
+      answerBoxes.classList.add("very-long"); // 👉 min-width: 30px
+    }
+
   } else {
     answerBoxes.style.flexWrap = "wrap";
   }

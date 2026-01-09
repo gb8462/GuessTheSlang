@@ -272,9 +272,14 @@ body {
 #answerBoxes.shrink-word .answer-box {
   flex-shrink: 1;
   width: clamp(20px, 8vw, 48px);
-  min-width: 40px;
+  min-width: 38px; /* default for <= 9 if you want */
   font-size: clamp(14px, 3vw, 20px);
 }
+
+#answerBoxes.very-long .answer-box {
+  min-width: 30px; /* 👉 only when length > 9 */
+}
+
 
 .letter-bank {
   display: grid;
