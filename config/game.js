@@ -465,12 +465,43 @@ function splitAnswerIntoRows(answer, maxLetters) {
   return rows;
 }
 
+function applyBoxSizingMode(answer) {
+  const hasSpace = answer.includes(" ");
+  const wordLength = answer.length;
+
+  // reset each call
+  answerBoxes.classList.remove("long-word");
+  answerBoxes.classList.remove("shrink-word");
+
+  if (hasSpace) {
+    answerBoxes.style.flexWrap = "wrap";
+    return;
+  }
+
+  if (wordLength > 7) {
+    answerBoxes.classList.add("shrink-word");
+    answerBoxes.classList.add("long-word");   // 👉 flex-start only here
+    answerBoxes.style.flexWrap = "nowrap";
+  } else {
+    answerBoxes.style.flexWrap = "wrap";
+  }
+}
+
 function buildAnswerBoxes(answer = "") {
+
+  applyBoxSizingMode(answer.toUpperCase());
+
   answerBoxes.innerHTML = "";
 
   let letterIndex = 0; // 👈 REQUIRED
 
-  const rows = splitAnswerIntoRows(answer, MAX_LETTERS_PER_ROW);
+  let rows;
+
+  if (answer.includes(" ")) {
+    rows = splitAnswerIntoRows(answer, MAX_LETTERS_PER_ROW);
+  } else {
+    rows = [answer]; // 👈 single long word stays one row
+  }
 
   rows.forEach(row => {
     for (const char of row) {
@@ -577,28 +608,30 @@ function restoreHints() {
   const level = safeLevel();
   if (!level) return;
 
-  const correct = level.answer.toUpperCase();
+  const answer = level.answer.toUpperCase();
   const state = getHintState();
   const revealed = state[currentLevel] || [];
 
-  revealed.forEach(i => {
-    const box = answerBoxes.children[i];
+  revealed.forEach(letterIndex => {
+    const box = [...answerBoxes.children]
+      .find(b => Number(b.dataset.index) === letterIndex);
+
     if (!box) return;
 
-    // find matching visible tile
     const tile = [...letterBank.children].find(
       t =>
-        t.textContent === correct[i] &&
+        t.textContent === answer[letterIndex] &&
         t.style.visibility !== "hidden"
     );
 
     if (!tile) return;
 
-    box.textContent = correct[i];
+    box.textContent = answer[letterIndex];
     box.dataset.srcTile = tile.dataset.tileId;
     tile.style.visibility = "hidden";
   });
 }
+
 
 // =======================
 //      SCORE SYSTEM
@@ -638,14 +671,6 @@ function markLevelCompleted(levelIndex) {
 // =======================
 //         ACTIONS
 // =======================
-
-function hasRewarded(level) {
-  return localStorage.getItem(`rewarded_${getUserId()}_${level}`) === "1";
-}
-
-function markRewarded(level) {
-  localStorage.setItem(`rewarded_${getUserId()}_${level}`, "1");
-}
 
 checkBtn.onclick = async () => {
   if (checkInProgress) return;
@@ -726,7 +751,7 @@ shuffleBtn.onclick = () => {
 // =======================
 //          HINT
 // =======================
- 
+
 hintBtn.onclick = async () => {
   if (hintInProgress) return;
   hintInProgress = true;
@@ -741,8 +766,13 @@ hintBtn.onclick = async () => {
     const level = safeLevel();
     if (!level) return unlock();
 
+    // real answer
     const answer = level.answer.toUpperCase();
-    const limit = getHintLimit(answer.length);
+
+    // ❗ letter-only (spaces removed)
+    const answerNoSpaces = answer.replaceAll(" ", "");
+
+    const limit = getHintLimit(answerNoSpaces.length);
 
     if (limit === 0) {
       customAlert("Hints are disabled for short words 👀");
@@ -757,15 +787,15 @@ hintBtn.onclick = async () => {
       return unlock();
     }
 
-    // 🔹 collect correct candidates using REAL letter index
-    const candidates = [...answerBoxes.children]
-      .filter(box => box.dataset.letter)
+    // ⭐ IMPORTANT:
+    // use ONLY real letter boxes
+    const candidates = getLetterBoxes()
       .map(box => ({
         box,
         letterIndex: Number(box.dataset.index)
       }))
       .filter(({ box, letterIndex }) =>
-        box.textContent !== answer[letterIndex]
+        box.textContent !== answerNoSpaces[letterIndex]
       );
 
     if (!candidates.length) {
@@ -773,7 +803,7 @@ hintBtn.onclick = async () => {
       return unlock();
     }
 
-    // 💰 only charge AFTER confirming a valid hint exists
+    // 💰 charge ONLY once we know a hint exists
     if (!(await spendPoints(10))) {
       customAlert("Not enough points!");
       return unlock();
@@ -784,20 +814,24 @@ hintBtn.onclick = async () => {
     const { box, letterIndex } =
       candidates[Math.floor(Math.random() * candidates.length)];
 
+    // clear wrong one before revealing
     if (box.textContent) clearBox(letterIndex);
 
+    // find matching visible tile
     const tile = [...letterBank.children].find(
       t =>
-        t.textContent === answer[letterIndex] &&
+        t.textContent === answerNoSpaces[letterIndex] &&
         t.style.visibility !== "hidden"
     );
 
     if (!tile) return unlock();
 
-    box.textContent = answer[letterIndex];
+    // reveal final hint
+    box.textContent = answerNoSpaces[letterIndex];
     box.dataset.srcTile = tile.dataset.tileId;
     tile.style.visibility = "hidden";
 
+    // save hint state
     state[currentLevel] ??= [];
     state[currentLevel].push(letterIndex);
     saveHintState(state);

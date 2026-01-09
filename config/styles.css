@@ -228,8 +228,32 @@ body {
 .answer-boxes {
   display: flex;
   justify-content: center;
+  align-items: center;
   gap: clamp(6px, 2vw, 10px);
-  flex-wrap: wrap;        /* 👈 allow going down */
+  flex-wrap: wrap;
+}
+
+@media (max-width: 600px) {
+  #answerBoxes {
+    display: flex;
+    flex-wrap: nowrap;     /* force one row */
+    overflow-x: auto;      /* scroll instead of shrink */
+    overflow-y: hidden;    
+    justify-content: flex-start;   /* ← important */
+  }
+
+  /* important: don't let boxes disappear */
+  #answerBoxes .answer-box {
+    flex-shrink: 1;
+  }
+  #answerBoxes {
+    justify-content: center;
+  }
+
+  #answerBoxes.long-word {
+    justify-content: flex-start;
+  }
+
 }
 
 .answer-box {
@@ -242,7 +266,14 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  flex-shrink: 0;         /* 👈 THIS stops shrinking */
+  flex-shrink: 0;
+}
+
+#answerBoxes.shrink-word .answer-box {
+  flex-shrink: 1;
+  width: clamp(20px, 8vw, 48px);
+  min-width: 40px;
+  font-size: clamp(14px, 3vw, 20px);
 }
 
 .letter-bank {
