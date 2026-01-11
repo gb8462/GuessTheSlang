@@ -12,7 +12,7 @@ You see multiple pictures → they all point to **one hidden word**. Type your a
 
 ## 🚀 Live Demo
 
-> Live Demo: `gb8462.github.io/GuessTheSlang/`
+> Live Demo: [GuessTheSlang](https://gb8462.github.io/GuessTheSlang/)
 
 ## 🛠️ Tech Stack
 
