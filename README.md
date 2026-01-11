@@ -37,6 +37,6 @@ You see multiple pictures → they all point to **one hidden word**. Type your a
 ## ⚙️ Setup / Run locally
 
 ```bash
-git clone https://github.com/YOUR-USERNAME/YOUR-REPO.git
-cd YOUR-REPO
+git clone https://github.com/gb8462/GuessTheSlang.git
+cd GuessTheSlang
 open index.html
