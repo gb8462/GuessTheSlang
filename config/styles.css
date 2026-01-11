@@ -593,3 +593,43 @@ body {
   margin: 0;
   padding: 0;
 }
+
+.level-meta {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.level-meta span {
+  padding: 4px 8px;
+  border-radius: 10px;
+  font-size: 12px;
+  font-weight: bold;
+  gap: 4px;              /* space between emoji and text */
+  line-height: 1;        /* prevents tall pill look */
+}
+
+/* Difficulty colors */
+#difficultyTag.easy { background:#c8ffc8; }
+#difficultyTag.medium { background:#fff4b8; }
+#difficultyTag.hard { background:#ffb8b8; }
+
+/* Community generic style */
+#communityTag {
+  background:#dbe6ff;
+}
+
+@media (max-width: 480px) {
+  .level-header {
+    display: flex;
+    justify-content: space-between;  /* level left, points right */
+    width: 100%;
+  }
+
+  .level-meta {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+    width: 100%;          /* full width under header */
+  }
+}

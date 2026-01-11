@@ -421,11 +421,46 @@ function loadLevel() {
     if (img) img.src = cleanURL(level.images?.[i]);
   });
 
+  // ⭐⭐⭐ ADD THIS ⭐⭐⭐
+  const communityEl = $("communityTag");
+  const difficultyEl = $("difficultyTag");
+
+  // emoji map for community
+  const communityEmoji = {
+    Gaming: "🎮 Gaming",
+    Meme: "🤣 Meme",
+    Tech: "💻 Tech",
+    Fandom: "🌟 Fandom",
+    Creator: "🎥 Creator"
+  };
+
+  if (communityEl) {
+    const c = level.community;
+    communityEl.textContent = communityEmoji[c] || c || "No community";
+  }
+
+  // stars for difficulty
+  const difficultyStars = {
+    Easy: "⭐ Easy",
+    Medium: "⭐⭐ Medium",
+    Hard: "⭐⭐⭐ Hard"
+  };
+
+  if (difficultyEl) {
+    const d = level.difficulty;
+    difficultyEl.textContent = difficultyStars[d] || d || "Unknown";
+
+    // keep your color classes working
+    difficultyEl.className = "";
+    if (d) difficultyEl.classList.add(d.toLowerCase());
+  }
+  // ⭐⭐⭐ END ADD ⭐⭐⭐
+
   nextBtn.style.display = "none";
   checkBtn.style.display = "inline-block";
 
   buildAnswerBoxes(level.answer);
-  buildLetterTiles(level.answer);  
+  buildLetterTiles(level.answer);
   restoreHints();
 }
 
