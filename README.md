@@ -1,4 +1,4 @@
-# 🧩 4 Pics 1 Word – Web Game
+<img width="1366" height="656" alt="image" src="https://github.com/user-attachments/assets/2ed0d6a0-e661-4961-ac0a-f65fd8306d4d" /># 🧩 4 Pics 1 Word – Web Game
 
 A simple word-guessing game inspired by **4 Pics 1 Word**.  
 You see multiple pictures → they all point to **one hidden word**. Type your answer and see if you’re right.
@@ -23,7 +23,8 @@ You see multiple pictures → they all point to **one hidden word**. Type your a
 
 ## 📸 Preview
 
-![Game Screenshot](https://github.com/user-attachments/assets/36b4116a-93f6-4444-b862-9a577cc45d6c)
+<img width="1366" height="656" alt="image" src="https://github.com/user-attachments/assets/c03f5095-64b0-4956-a3e6-8f6579b3e9b1" />
+
 
 ## ▶️ How to Play
 
