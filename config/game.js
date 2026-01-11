@@ -330,7 +330,15 @@ async function spendPoints(amount) {
 // ---------- UI ----------
 async function updatePointsUI() {
   if (!scoreText) return;
-  scoreText.textContent = `Points: ${await getPoints()}`;
+
+  const pts = await getPoints();
+
+  const label = pts === 0 ? "💀 Points" :
+                pts < 100 ? "⭐ Points" :
+                pts < 1000 ? "💰 Points" :
+                "👑 Points";
+
+  scoreText.textContent = `${label}: ${pts}`;
 }
 
 // =======================

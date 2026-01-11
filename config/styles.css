@@ -633,3 +633,13 @@ body {
     width: 100%;          /* full width under header */
   }
 }
+
+.points-ui {
+  padding: 6px 12px;
+  border-radius: 12px;
+  font-weight: 800;
+  font-size: 14px;
+  background: #fff;
+  border: 2px solid #ffd966;
+  box-shadow: 0 3px 0 #e6c157;
+}
