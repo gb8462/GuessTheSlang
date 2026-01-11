@@ -16,6 +16,9 @@ body {
   align-items: center;
   user-select: none;
 }
+body {
+  background: linear-gradient(130deg, #ff9a9e, #fad0c4 30%, #a1c4fd 70%, #c2e9fb);
+}
 
 /* =======================
       BACK BUTTON

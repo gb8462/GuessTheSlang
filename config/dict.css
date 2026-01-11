@@ -14,6 +14,9 @@ body {
   padding: 10px;
   user-select: none;
 }
+body {
+  background: linear-gradient(130deg, #ff9a9e, #fad0c4 30%, #a1c4fd 70%, #c2e9fb);
+}
 
 /* =======================
    BACK BUTTON
@@ -51,6 +54,33 @@ h1 {
   -webkit-background-clip: text;
 }
 
+.header-bar {
+  max-width: 760px;
+  margin: 30px auto 18px;
+  padding: 10px 14px;
+  border-radius: 16px;
+  background: rgba(255,255,255,0.65);
+  backdrop-filter: blur(10px);
+  box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.header-bar h1 {
+  font-size: 22px;
+  margin: 0;
+  background: none;
+  color: #1f2937;
+}
+
+.header-bar i {
+  font-size: 20px;
+}
+
+
 /* =======================
    SCROLLABLE CONTAINER
 ======================= */
@@ -82,17 +112,23 @@ h1 {
    ENTRY CARD
 ======================= */
 .entry {
-  background: #ffffff;
-  border-radius: 16px;
-  padding: 18px 20px;
-  box-shadow: 0 6px 18px rgba(0,0,0,0.08);
+  background: linear-gradient(135deg, #ffffff, #f7f9ff);
+  border-radius: 18px;
+  padding: 16px 18px;
+  border: 1px solid rgba(0,0,0,0.05);
+
+  box-shadow: 0 6px 16px rgba(0,0,0,0.06);
   transition: 0.2s ease;
+
+  display: grid;
+  gap: 6px;
 }
 
 .entry:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 10px 26px rgba(0,0,0,0.14);
+  transform: translateY(-3px);
+  box-shadow: 0 10px 24px rgba(37,99,235,0.15);
 }
+
 
 /* =======================
           WORD
@@ -114,35 +150,33 @@ h1 {
   font-size: 14px;
   color: #4b5563;
   line-height: 1.5;
+  font-size: 15px;
 }
 
 /* =======================
    LOCKED STATE
 ======================= */
 .entry.locked {
-  background: linear-gradient(135deg, #063a64, #052d4e);
-  color: #e5e7eb;
-  box-shadow: none;
+  background: linear-gradient(140deg, #0b1630, #0e223f);
+  border: 1px solid rgba(255,255,255,0.1);
 }
 
-.entry.locked:hover {
-  transform: none;
+.entry.locked .word {
+  color: #facc15;
 }
 
-.entry.locked .word,
 .entry.locked .desc {
-  color: #e5e7eb;
+  opacity: 0.7;
 }
 
-/* Lock label */
 .lock-label {
-  margin-top: 10px;
-  font-size: 13px;
-  font-style: italic;
-  display: flex;
-  align-items: center;
+  display: inline-flex;
   gap: 6px;
-  opacity: 0.85;
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 12px;
+  background: rgba(250, 216, 63, 0.973);
+  color: rgb(0, 0, 0);
 }
 
 /* =======================
@@ -155,6 +189,42 @@ h1 {
   padding: 4px 10px;
   border-radius: 999px;
   font-weight: 700;
+}
+
+.tags-row {
+  display: flex;
+  gap: 8px;
+  margin-top: 6px;
+  flex-wrap: wrap;
+}
+
+.tag {
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+/* community pill */
+.community-tag {
+  background: #eef2ff;
+  color: #4338ca;
+}
+
+/* difficulty colors */
+.difficulty-tag.easy {
+  background: #ecfdf5;
+  color: #047857;
+}
+
+.difficulty-tag.medium {
+  background: #fef9c3;
+  color: #92400e;
+}
+
+.difficulty-tag.hard {
+  background: #fee2e2;
+  color: #991b1b;
 }
 
 /* =======================

@@ -19,6 +19,10 @@ body {
   align-items: center;
   user-select: none;
 }
+body {
+  background: linear-gradient(130deg, #ff9a9e, #fad0c4 30%, #a1c4fd 70%, #c2e9fb);
+}
+
 
 /* ===================== */
 /*     HOME CONTAINER    */
@@ -34,29 +38,43 @@ body {
   gap: clamp(12px, 3vw, 18px);
   box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
 }
+.home-container {
+  background: linear-gradient(145deg,#ffffff,#f3f3f7);
+  border: 1px solid rgba(129, 129, 129, 0.6);
+  box-shadow: 
+    0 20px 40px rgba(0,0,0,0.08),
+    inset 0 0 0 1px rgba(255,255,255,0.4);
+  backdrop-filter: blur(12px);
+}
 
 .Greeter {
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 6px;
+  gap: 8px;              /* space between Welcome + name */
+  margin: 6px 0 16px 0;
+}
+
+.Greeter h3 {
+  font-size: 16px;       /* smaller */
+  font-weight: 600;
+  margin: 0;
+}
+
+#nickname {
+  font-size: 16px;       /* same size as Welcome */
+  font-weight: 700;
+  color: #6478e4;        /* highlight name */
+  display: inline;       /* stays on the same line */
 }
 
 .title {
   font-size: clamp(28px, 7vw, 38px);
   font-weight: 700;
-  color: #ffe94a;
+  color: #f7df2d;
   text-shadow:
     0 2px 4px rgba(0, 0, 0, 0.35),
     0 0 8px rgba(255, 235, 90, 0.5);
-}
-
-#nickname {
-  font-weight: bold;
-  padding: 2px 8px;
-  border-radius: 10px;
-  background: rgba(255, 255, 255, 0.15);
-  backdrop-filter: blur(5px);
 }
 
 /* ===================== */
@@ -75,7 +93,7 @@ body {
   border: 2px solid #ddd;
   border-radius: 10px;
   cursor: pointer;
-  transition: 0.2s ease;
+  transition: 0.18s ease;
 }
 
 .button-group button:hover {
@@ -84,15 +102,29 @@ body {
 }
 
 #playBtn {
-  background: #2667ff;
+  background: #1092dd;
   color: #fff;
   border: none;
 }
-
 #playBtn:hover {
   background: #1d55d8;
 }
-
+#logoutBtn:hover {
+  background: #d81d1d;
+  color: white;
+}
+#loginBtn:hover {
+  background: #1da3d8;
+  color: white;
+}
+#leaderboardBtn:hover {
+  background: #eed231;
+  color: rgb(0, 12, 29);
+}
+#dictionaryBtn:hover {
+  background: #685ae6;
+  color: white;
+}
 /* ===================== */
 /*        MODALS         */
 /* ===================== */
@@ -642,4 +674,13 @@ body {
   background: #fff;
   border: 2px solid #ffd966;
   box-shadow: 0 3px 0 #e6c157;
+}
+
+.button-group button {
+  background: linear-gradient(#ffffff, #e9e9e9);
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+
+.button-group button:hover {
+  box-shadow: 0 6px 14px rgba(0,0,0,0.18);
 }

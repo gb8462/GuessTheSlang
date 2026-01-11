@@ -43,6 +43,26 @@ function getCompletedLevels() {
   );
 }
 
+function getCommunityText(comm) {
+  const map = {
+    Gaming: "🎮 Gaming",
+    Meme: "🤣 Meme",
+    Tech: "💻 Tech",
+    Fandom: "🌟 Fandom",
+    Creator: "🎥 Creator"
+  };
+  return map[comm] || comm || "No tag";
+}
+
+function getDifficultyText(diff) {
+  const map = {
+    Easy: "⭐ Easy",
+    Medium: "⭐⭐ Medium",
+    Hard: "⭐⭐⭐ Hard"
+  };
+  return map[diff] || diff || "Unknown";
+}
+
 // =======================
 //     LOAD DICTIONARY
 // =======================
@@ -77,6 +97,14 @@ async function loadDictionary() {
             ${level.answer}
             <span class="unlocked-badge">UNLOCKED</span>
           </div>
+
+          <div class="tags-row">
+            <span class="tag community-tag">${getCommunityText(level.community)}</span>
+            <span class="tag difficulty-tag ${level.difficulty?.toLowerCase() || ""}">
+              ${getDifficultyText(level.difficulty)}
+            </span>
+          </div>
+
           <div class="desc">${level.description || "No description yet."}</div>
         `;
 
