@@ -19,7 +19,7 @@ You see multiple pictures → they all point to **one hidden word**. Type your a
 - HTML  
 - CSS  
 - JavaScript  
-- (optional) Firebase / API / etc — add if you use it
+- Firebase
 
 ## 📸 Preview
 
